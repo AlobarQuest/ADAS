@@ -1,7 +1,7 @@
 # ADR-0001: ADAS Adopted
 
 **Status:** Accepted  
-**Date:** (insert date)  
+**Date:** 11/27/2025  
 **Version:** ADAS v1.0  
 
 ---

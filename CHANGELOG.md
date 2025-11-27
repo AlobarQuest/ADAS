@@ -10,7 +10,7 @@ Semantic-style versioning: **MAJOR.MINOR**
 ---
 
 ## v1.0 – Initial Release
-**Date:** (insert date)
+**Date:** 11/27/2025
 
 ### Added
 - Initial Global ADAS governance model  

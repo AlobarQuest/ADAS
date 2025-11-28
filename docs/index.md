@@ -53,6 +53,8 @@ with navigation links into the key explainer documents.
 
 ## For AI Helpers
 
+[AI Helpers Read Me](./for-ai-helpers-how-to-load-adas-context.md)
+
 When acting as an AI helper in a project that uses Global ADAS:
 
 - Treat this site as the **narrative explanation** of the ADAS system.

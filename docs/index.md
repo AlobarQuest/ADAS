@@ -26,7 +26,7 @@ If you're new to ADAS, read these first:
 
 2. **ADAS File Specifications Overview**  
    A concise explanation of each Domain Specification file and how it is used.
-   👉 [ADAS File Specifications Overview](./adas-file-specifications-overview.md)
+   👉 [ADAS File Specifications Overview](./ADAS-file-specifications-overview.md)
 
 ---
 
@@ -34,7 +34,7 @@ If you're new to ADAS, read these first:
 
 - **Wiki-Style Overview of Specifications**  
   A version of the file-spec overview formatted for use in a wiki or more narrative docs.  
-  👉 [ADAS File Specifications Overview (Wiki Edition)](./adas-file-specifications-overview-wiki.md)
+  👉 [ADAS File Specifications Overview (Wiki Edition)](./ADAS-file-specifications-overview-wiki.md)
 
 ---
 

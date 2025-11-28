@@ -1,130 +1,134 @@
 # ADAS Usage Modes — Light vs Heavy
 
 This document defines the two operational modes AI helpers use when interacting with ADAS-enabled projects: **Light Mode** and **Heavy Mode**.  
-Modes allow ADAS to stay powerful without requiring full governance for every small task.
+Modes keep ADAS powerful without forcing full governance for every small task.
 
 ---
 
-# 1. Purpose of Usage Modes
+## 1. Why Usage Modes Exist
 
-ADAS contains a rich set of rules, domains, and overlays. Not all tasks require the entire system to be loaded.  
+ADAS has rich rules across many Domains. Not all tasks need the full system loaded.
+
 Usage modes allow AI helpers to:
 
-- Reduce token cost  
+- Reduce token usage  
 - Improve speed  
 - Reduce reasoning complexity  
-- Apply appropriate levels of governance  
-- Maintain consistency across small vs large tasks  
+- Apply governance appropriate to the task  
+- Stay consistent across projects and profiles  
 
 ---
 
-# 2. Light Mode — Scoped, Fast, Minimal Governance
+## 2. Light Mode — Scoped, Fast, Minimal Governance
 
-## 2.1 When to Use Light Mode
+### 2.1 When to Use Light Mode
 
 Use Light Mode for tasks such as:
 
 - Small refactors  
-- Renaming functions, variables, files  
+- Renaming functions, variables, or files  
 - Adding tests for existing behavior  
 - Updating documentation or comments  
 - Minor UI or code adjustments  
 - Fixing isolated bugs  
-- “Make this cleaner/safer” style tasks
+- “Make this function cleaner/safer” style changes  
 
-## 2.2 What to Load in Light Mode
+### 2.2 What to Load in Light Mode
 
 AI helpers must load:
 
 1. `.ai/00_ai-entry-point-meta-rules.md`  
-2. Domain 01 — behavior/meta summary **only**  
-3. Domain 14 — file naming & path rules summary  
-4. The **single Domain** relevant to the task:
-   - Tech Stack → Domain 03 (core + profile + local)
-   - Architecture → Domain 04 (core + profile + local)
-   - Testing → Domain 06 (core + profile + local)
-   - Security → Domain 12 (core + profile + local)
+2. Domain 01 — behavior/meta **summary** only  
+3. Domain 14 — naming & path **summary**  
+4. The **single primary Domain** relevant to the task:
+   - Tech Stack → Domain 03 (Core + Mode-Aware Addendum + Profile + `.local`)  
+   - Architecture → Domain 04 (Core + Addendum + Profile + `.local`)  
+   - Testing → Domain 06 (Core + Addendum + Profile + `.local`)  
+   - Security → Domain 12 (Core + Addendum + Profile + `.local`)  
 5. The code files touched
 
-## 2.3 Light Mode Behavior Rules
+### 2.3 Light Mode Behavior Rules
 
-- Assume the existing architecture and stack are ADAS‑compliant  
-- Do not propose large redesigns  
-- Do not modify security models  
-- Do not create or modify ADRs  
-- Confine reasoning to the smallest possible scope  
-- Prefer speed over depth, so long as safety is maintained  
+- Assume existing architecture & stack are ADAS-compliant  
+- Do **not** propose broad redesigns or stack changes  
+- Do **not** change auth/security models  
+- Do **not** create or modify ADRs  
+- Keep reasoning as local as possible  
+- Prefer speed and simplicity while staying safe  
 
 ---
 
-# 3. Heavy Mode — Full ADAS Governance
+## 3. Heavy Mode — Full ADAS Governance
 
-## 3.1 When to Use Heavy Mode
+### 3.1 When to Use Heavy Mode
 
 Use Heavy Mode for:
 
 - New modules or features  
 - Major refactors  
 - Architecture-level decisions  
-- Security, authentication, or authorization changes  
+- Security, authentication, or authorization work  
 - Data model changes  
 - Introducing or replacing dependencies  
-- Anything cross-cutting or system-level  
+- Cross-cutting or system-level changes  
 
-## 3.2 What to Load in Heavy Mode
+### 3.2 What to Load in Heavy Mode
 
 AI helpers must load:
 
 1. `.ai/00_ai-entry-point-meta-rules.md`  
-2. **All Core Domains** (01–15)  
-3. **All Profile overrides** (e.g., web-app 03, 04, 06, 12)  
-4. **All relevant `.local` files**, especially:
+2. **All Core Domains 01–15**, including any Mode-Aware Addenda  
+3. All **Profile overrides** for the active Profile  
+4. All relevant `.local` files, especially:
    - 03, 04, 06, 07, 10, 11, 12, 14, 15  
-5. Any ADRs related to the task  
-6. Any feature ledger entries related to the task  
-7. All code files impacted
+5. ADRs relevant to the task (Domain 11)  
+6. Feature Ledger entries (Domain 09)  
+7. All relevant code files
 
-## 3.3 Heavy Mode Behavior Rules
+### 3.3 Heavy Mode Behavior Rules
 
 - Enforce ADAS strictly  
-- Identify and call out conflicts between user request and ADAS rules  
-- Suggest ADRs if the change requires altering ADAS itself  
-- Update or request updates to `.local` files when needed  
-- Err toward architectural consistency and security correctness  
+- Call out conflicts between the request and ADAS rules  
+- Suggest ADRs when changes alter architecture, stack, or security posture  
+- Propose updates to `.local` files when project-level rules change  
+- Prefer architectural and security correctness over minimal change  
 
 ---
 
-# 4. Quick Mode Decision Guide
+## 4. Quick Mode Decision Guide
 
-| Situation | Mode |
-|----------|------|
-| Rename/refactor small function | **Light** |
-| Add tests for one module | **Light** |
-| Update component UI | **Light** |
-| Implement new feature | **Heavy** |
-| Modify auth/security/data access | **Heavy** |
-| Create new folder/module/service | **Heavy** |
-| Change tech stack or framework | **Heavy** |
-| Fix security vulnerability | **Heavy** |
-
----
-
-# 5. Integration with AI Helper Loading Process
-
-AI helpers must determine mode **before** loading ADAS.  
-See: `for-ai-helpers-how-to-load-adas-context.md` for loading rules.
+| Situation                                      | Mode    |
+|-----------------------------------------------|---------|
+| Rename a function                             | Light   |
+| Add tests for an existing module              | Light   |
+| Small UI tweak                                | Light   |
+| Implement a brand new feature                 | Heavy   |
+| Change authentication logic                    | Heavy   |
+| Change data model or persistence strategy     | Heavy   |
+| Introduce/replace major dependencies          | Heavy   |
+| Reorganize folder structure / architecture    | Heavy   |
 
 ---
 
-# 6. Summary
+## 5. Integration with the Loading Process
 
-Usage modes keep ADAS:
+Mode selection happens **before** loading Domains.
 
-- Efficient  
-- Scalable  
-- Easy to use  
-- Governed when needed  
-- Lightweight when appropriate  
+The loading process is defined in:
 
-Light Mode = fast, scoped work.  
-Heavy Mode = full governance and architectural safety.
+- `Domain 01 – AI Entry Point & Meta-Rules`  
+- `for-ai-helpers-how-to-load-adas-context.md`
+
+When a Core Domain has a **Mode-Aware Addendum**, AI helpers must:
+
+- Load the addendum whenever they load that Domain  
+- Interpret the Domain according to the current Mode  
+
+---
+
+## 6. Summary
+
+- Light Mode → fast, local, minimal ADAS load  
+- Heavy Mode → full governance, strict ADAS enforcement  
+
+These modes are how ADAS balances **power** with **efficiency**.

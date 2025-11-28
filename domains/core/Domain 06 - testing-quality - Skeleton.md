@@ -1,26 +1,36 @@
-# Domain 06 — Testing & Quality (Profile-Aware Skeleton)
+# Domain 06 — Testing & Quality  
+**Skeleton — Profile- & Mode-Aware**
 
 ## Purpose
-Document the testing strategy specific to this project.
-
-## ADAS Layers
-- Core testing rules
-- Profile defaults ({{ADAS_PROFILE}})
-- Project-specific variations
+Describe the testing strategy and quality expectations for this project.
 
 ## Tooling
+
 - Unit tests:
 - Integration tests:
-- UI tests:
+- UI/component tests:
 - E2E tests:
+- Mocking utilities:
+- CI tooling:
 
-## CI Requirements
-- Type checking:
-- Linting:
-- Test suites:
+## Test Layout
 
-## Overrides
-Justify deviations from the Profile defaults.
+```text
+tests/
+  unit/
+  integration/
+  e2e/
+```
 
-## Additional Notes
-Any project-specific testing constraints or expectations.
+## Mode Behavior
+
+- **Light Mode**:
+  - How should AI helpers add or modify tests for small changes?
+
+- **Heavy Mode**:
+  - How should AI helpers use or update this file when large testing changes are needed?
+
+## Profile Integration
+
+- How this test strategy aligns with Profile defaults:
+- Any project-specific extensions or stricter rules.

@@ -1,28 +1,36 @@
-# Domain 12 — Security & Secrets (Profile-Aware Skeleton)
+# Domain 12 — Security & Secrets  
+**Skeleton — Profile- & Mode-Aware**
 
 ## Purpose
-Describe security decisions & secrets handling for this project.
-
-## ADAS Layers
-- Core security rules (never reducible)
-- Profile-specific additions
-- Project-specific constraints here
+Capture project-specific security constraints and secret-handling practices.
 
 ## Secrets Handling
-- Environment variables:
-- Validation strategy:
-- Secret storage platform:
+
+- Where secrets live (env, secret manager, etc.):
+- Validation strategies:
+- Rotation policies (if any):
 
 ## Authentication
-Describe chosen auth system (profile default or overridden).
+
+- Provider(s):
+- Flows:
+- Session handling:
 
 ## Authorization
-- Server-side checks:
-- Role logic:
-- Database-level policies:
 
-## Overrides
-List enhancements; core security cannot be weakened.
+- Role model:
+- Permission checks:
+- Data access patterns (RLS, etc.):
 
-## Warnings
-List any unresolved or high-risk areas requiring ADRs.
+## Mode Behavior
+
+- **Light Mode**:
+  - How should AI helpers interpret this file when doing small, non-structural changes?
+
+- **Heavy Mode**:
+  - How should AI helpers use or update this file when security posture changes?
+
+## Profile Integration
+
+- How this project adheres to Profile-level security rules:
+- Any stricter local rules (never weaker).

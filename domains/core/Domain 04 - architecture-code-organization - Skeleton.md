@@ -1,28 +1,36 @@
-# Domain 04 — Architecture & Code Organization (Profile-Aware Skeleton)
+# Domain 04 — Architecture & Code Organization  
+**Skeleton — Profile- & Mode-Aware**
 
 ## Purpose
-Describe **this project's** architectural decisions.
+Describe this project's architectural structure and folder layout, in relation to:
 
-## ADAS Layers
-- Core architecture rules
-- Profile architecture defaults ({{ADAS_PROFILE}})
-- Project-specific structure here
+- Core Domain 04
+- Active Profile ({{ADAS_PROFILE}})
+- Usage Modes
 
 ## Folder Structure
-Summarize the real project structure:
-```
+
+```text
 src/
   ...
 ```
 
-## Separation of Concerns
-- UI:
-- Server logic:
+## Layers & Boundaries
+
+- UI layer:
+- Server/business logic:
 - Data access:
-- Utilities:
+- Shared utilities:
 
-## Overrides
-List architecture deviations and reasons.
+## Mode Behavior
 
-## Constraints
-Any non-negotiable rules or invariants.
+- **Light Mode**:
+  - How should AI helpers treat this architecture when making small changes?
+
+- **Heavy Mode**:
+  - How should AI helpers use this file when refactoring or adding major features?
+
+## Profile Integration
+
+- How this structure follows Profile defaults:
+- Intentional deviations and reasons (with ADR links).

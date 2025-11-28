@@ -1,135 +1,155 @@
 # ADAS Documentation Home
 
-Welcome to the documentation for the **AI Development Assistant System (ADAS)** — a governance, reasoning, and consistency framework that empowers Devon and Devon’s AI helpers to collaborate predictably across all software projects.
+ADAS (AI Development Assistant System) is the governance and reasoning framework that keeps Devon’s AI helpers aligned, consistent, and safe across all projects.
 
-ADAS enables:
+ADAS gives you:
 
-- Stable, consistent architectural decisions  
-- Clear expectations for code quality  
-- Predictable behavior across all AI helpers  
-- Safe, structured evolution of software systems  
-- Reduced drift and reduced “AI chaos”  
-- Multi‑profile support (web-app, desktop-app, mobile-ios)
-
----
-
-# 1. About ADAS
-
-ADAS is structured into three layers:
-
-1. **Core** — global rules for all projects  
-2. **Profiles** — specialization per project type (e.g., web-app)  
-3. **Project `.local`** — project-level overrides and metadata  
-
-A single machine-readable configuration file (`adas-config.json`) defines:
-
-- core version  
-- active profiles  
-- override domains  
-- starter templates  
-- non-overridable rules  
+- Stable architectural and coding standards  
+- Clear guidance for AI helpers  
+- Safe evolution of rules and conventions  
+- Multi-profile support (web-app now, others later)  
+- Two usage modes for AI helpers: **Light Mode** and **Heavy Mode**
 
 ---
 
-# 2. Key Documents
+## 1. ADAS Layers
 
-### Core Learning Path
+ADAS is structured into three main layers:
+
+1. **Core Domains** – global rules for all projects  
+2. **Profiles** – specialization per project type (e.g., `web-app`)  
+3. **Project `.local`** – per-project overrides and metadata  
+
+Core + Profiles + Local overlays are wired together via:
+
+- `adas-config.json` — machine-readable configuration  
+- `.ai/00_ai-entry-point-meta-rules.md` — per-project entrypoint for AI helpers  
+
+Some Core Domains also have **Mode-Aware Addenda**, which explain how they behave in **Light Mode** vs **Heavy Mode**.
+
+---
+
+## 2. Usage Modes (Light vs Heavy)
+
+AI helpers use two operational modes:
+
+- **Light Mode** – for small, localized tasks  
+  - Minimal ADAS load (summaries + relevant Domains)  
+  - No architecture or security rewrites  
+  - No ADR creation  
+
+- **Heavy Mode** – for architecture, security, and system-level changes  
+  - Full ADAS load (Core + Profiles + Local + ADRs)  
+  - Strict governance enforcement  
+  - ADRs and ADAS updates allowed when appropriate  
+
+See:  
+→ `adas-usage-modes.md` for details.
+
+---
+
+## 3. Key Documents
+
+### Conceptual Overview
 
 - **Understanding ADAS Domains**  
   → `understanding-adas-domains.md`
 
-- **ADAS File Structure and Specifications**  
+- **ADAS File Specifications**  
   → `ADAS-file-specifications-overview.md`
 
-- **Wiki Overview (Human-friendly Map)**  
+- **Wiki-Friendly Overview of Files**  
   → `ADAS-file-specification-overview-wiki.md`
 
-- **How to Load ADAS as an AI Helper**  
-  → `for-ai-helpers-how-to-load-adas-context.md`
+### Operational Guides
 
-- **Profile & Config Guide**  
+- **Profiles & Config**  
   → `adas-profiles-and-config.md`
 
-- **Usage Modes: Light vs Heavy**  
+- **For AI Helpers: How to Load ADAS Context**  
+  → `for-ai-helpers-how-to-load-adas-context.md`
+
+- **Usage Modes**  
   → `adas-usage-modes.md`
 
 ---
 
-# 3. Profiles
+## 4. Profiles
 
 ADAS supports different Profiles for different project types.  
-Current Profile set:
+Current plan:
 
-- **web-app** (stable)  
-- desktop-app (experimental)  
-- mobile-ios (planned)  
+- `web-app` – implemented and stable  
+- `desktop-app` – planned  
+- `mobile-ios` – planned  
 
-Each Profile overrides specific Domains.
+Each Profile has its own set of Domain overrides, e.g.:
+
+- `domains/profiles/web-app/Domain 03 - Tech Stack & Constraints (web-app, Mode-Aware).md`
+
+Profiles specialize:
+
+- Tech stack choices  
+- Architecture patterns  
+- Testing conventions  
+- Security posture  
 
 See:  
-→ `domains/profiles/<profile>/`
+→ `adas-profiles-and-config.md`
 
 ---
 
-# 4. ADAS Starter Templates
+## 5. Project Starters
 
-Each profile includes a starter `.ai` folder for new projects.
+Each Profile can ship with a starter `.ai` folder for new projects.
 
-Example:  
-```
+Example:
+
+```text
 starters/web-app/.ai/
+  00_ai-entry-point-meta-rules.md
+  03_tech-stack-constraints.local.md
+  04_architecture-code-organization.local.md
+  06_testing-quality.local.md
+  07_workflow-git-code-review.local.md
+  08_project-status-current-work.local.md
+  09_feature-ledger.local.md
+  10_pitfalls-invariants.local.md
+  11_decisions-adrs.local.md
+  12_security-secrets.local.md
+  14_adas-file-organization-naming.local.md
+  15_adas-overview-maintenance.local.md
 ```
 
 ---
 
-# 5. Versioning and Maintenance
+## 6. Versioning & Governance
 
-ADAS supports semantic versioning:
+ADAS uses semantic versioning:
 
-- MAJOR — breaking changes  
-- MINOR — additive, non-breaking changes  
+- `MAJOR.MINOR` (e.g., `1.0`, `1.1`)  
 
-All changes must be recorded via ADRs and must update:
+Global governance is defined in **Domain 15** and implemented via:
 
-- Domain 15  
-- relevant Domains  
-- starter templates  
-- adas-config.json  
-- docs pages  
+- ADRs (Domain 11)  
+- Core & Profile Domain updates  
+- Starter template updates  
+- `adas-config.json` updates  
 
 ---
 
-# 6. How to Use ADAS Day-to-Day
+## 7. Getting Started
 
-AI helpers use two modes:
+If you’re an AI helper:
 
-- **Light Mode** — small scoped tasks, minimal ADAS loading  
-- **Heavy Mode** — architecture, security, and large changes
+1. Read `.ai/00_ai-entry-point-meta-rules.md` in the project.  
+2. Read `adas-profiles-and-config.md`.  
+3. Read `adas-usage-modes.md`.  
+4. Follow `for-ai-helpers-how-to-load-adas-context.md` exactly.
 
-See:  
-→ `adas-usage-modes.md`
+If you’re Devon:
 
----
+- Use Light Mode for quick, local changes.  
+- Use Heavy Mode when making system-level changes, new features, or security work.
 
-# 7. Contributing / Evolving ADAS
-
-ADAS evolves through structured processes:
-
-- Write an ADR (Domain 11)  
-- Update Profile or Core Domains  
-- Update Skeletons  
-- Update Starter Templates  
-- Bump Versions  
-- Update Documentation  
-
----
-
-# 8. Summary
-
-ADAS is a powerful, structured operational framework for AI-assisted development.  
-It reduces chaos, improves predictability, and enforces the standards Devon wants across all projects.
-
-Start exploring by reading:
-
-- `adas-usage-modes.md`  
-- `for-ai-helpers-how-to-load-adas-context.md`
+ADAS is here to keep everything predictable, safe, and aligned with how you want to build software.

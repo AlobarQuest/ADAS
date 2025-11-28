@@ -3,6 +3,10 @@
 ADAS_CORE_VERSION: 1.0.0
 ADAS_PROFILE: web-app
 
+USAGE_MODES:
+  - Light
+  - Heavy
+
 LOCAL_OVERRIDES:
   - 01_product-vision-domain-language.local.md
   - 03_tech-stack-constraints.local.md
@@ -19,8 +23,15 @@ LOCAL_OVERRIDES:
 
 ADAS_REPO: https://github.com/AlobarQuest/ADAS
 
-INSTRUCTIONS:
-- Load Core Domains
-- Load web-app profile overrides
-- Load all .local files
-- Enforce non-overridable Domains
+## Instructions for AI Helpers
+
+1. Determine **Usage Mode** (Light vs Heavy) using `docs/adas-usage-modes.md`.
+2. Load ADAS as defined in `docs/for-ai-helpers-how-to-load-adas-context.md`.
+3. Always respect:
+   - Core Domains
+   - Mode-Aware Addenda
+   - web-app Profile Domains
+   - Project `.local` files
+
+In **Light Mode**, keep changes small and localized.  
+In **Heavy Mode**, enforce ADAS strictly and propose ADRs when needed.

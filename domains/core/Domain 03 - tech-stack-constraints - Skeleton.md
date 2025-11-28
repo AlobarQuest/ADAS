@@ -1,24 +1,38 @@
-# Domain 03 — Tech Stack & Constraints (Profile-Aware Skeleton)
+# Domain 03 — Tech Stack & Constraints  
+**Skeleton — Profile- & Mode-Aware**
 
 ## Purpose
-Summarize **this project's** tech stack selections and constraints.
+Summarize this project's tech stack choices and constraints, relative to:
 
-## ADAS Layers
-- Core rules: apply unless overridden
-- Profile: {{ADAS_PROFILE}} provides defaults
-- Project `.local`: customize here
+- Core Domain 03
+- Active Profile ({{ADAS_PROFILE}})
+- Usage Modes (Light, Heavy)
 
-## Technology Summary
+## Tech Stack Summary
+
 - Primary language:
 - Framework:
 - Backend provider:
+- Database:
 - UI libraries:
 - State management:
-- Additional constraints:
+- Other key tools:
 
-## Overrides
-- Deviations from profile defaults:
-- Justification:
+## Constraints
 
-## Forbidden / Avoid
-- Any technologies restricted by profile or ADAS core.
+- Required:
+- Allowed with justification:
+- Forbidden:
+
+## Mode Behavior
+
+- **Light Mode** (local, small changes):
+  - How should AI helpers interpret this file when doing small updates?
+
+- **Heavy Mode** (system-level changes):
+  - How should AI helpers use or update this file when the stack changes?
+
+## Profile Integration
+
+- How this project aligns with the Profile defaults:
+- Where it intentionally deviates (with ADR references if applicable).

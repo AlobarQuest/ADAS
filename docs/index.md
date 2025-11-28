@@ -26,7 +26,7 @@ If you're new to ADAS, read these first:
 
 2. **ADAS File Specifications Overview**  
    A concise explanation of each Domain Specification file and how it is used.
-   👉 [ADAS File Specifications Overview](./adas-file-specifications-overview.md)
+   👉 [ADAS File Specifications Overview](./ADAS-file-specifications-overview.md)
 
 ---
 

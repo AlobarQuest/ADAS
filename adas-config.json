@@ -2,7 +2,7 @@
   "adas_core": {
     "name": "AI Development Assistant System (ADAS)",
     "version": "1.0.0",
-    "non_overridable_domains": ["01", "07", "11", "14", "15"],
+    "non_overridable_domains": ["01", "07", "11", "12", "14", "15"],
     "domains_root": "domains/core",
     "description": "Core governance and behavior rules for all AI helpers in all projects."
   },
@@ -16,9 +16,7 @@
       "overrides_domains": ["03", "04", "06", "12"],
       "starter": {
         "name": "ADAS Web App Starter",
-        "repo": "AlobarQuest/adas-web-starter",
-        "branch": "main",
-        "path": "/starters/web-app"
+        "path": "starters/web-app"
       }
     },
 
@@ -30,9 +28,7 @@
       "overrides_domains": ["03", "04", "06", "12"],
       "starter": {
         "name": "ADAS Desktop App Starter",
-        "repo": "AlobarQuest/adas-desktop-starter",
-        "branch": "main",
-        "path": "/starters/desktop-app"
+        "path": "starters/desktop-app"
       }
     },
 
@@ -44,9 +40,7 @@
       "overrides_domains": ["03", "04", "06", "12"],
       "starter": {
         "name": "ADAS iOS App Starter",
-        "repo": "AlobarQuest/adas-mobile-ios-starter",
-        "branch": "main",
-        "path": "/starters/mobile-ios"
+        "path": "starters/mobile-ios"
       }
     }
   },

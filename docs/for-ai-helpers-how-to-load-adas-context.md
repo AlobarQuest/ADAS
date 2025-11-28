@@ -1,192 +1,132 @@
----
-title: For AI Helpers: How to Load ADAS Context
-layout: default
-nav_order: 6
-description: Operational guide for AI helpers on how to load and apply Global ADAS and project overlays.
----
+# For AI Helpers: How to Load ADAS Context  
+**Updated to Support Usage Modes + Multi-Profile Architecture**
 
-# For AI Helpers: How to Load ADAS Context
-
-This page is written directly for **AI helpers** working in a project that uses
-Devon's Global ADAS system.
-
-Your job is to:
-
-- Load the correct ADAS context (Global + project overlay)  
-- Understand which Domains apply to the task  
-- Obey ADAS rules while generating or modifying code  
+This document defines the exact steps AI helpers must follow to load ADAS in either **Light Mode** or **Heavy Mode**.
 
 ---
 
-## 1. Locate the Project `.ai` Directory
+# 1. Determine Usage Mode
 
-In any ADAS-enabled project, there is a `.ai/` folder at the repo root.
+Before loading ADAS, AI helpers must classify the task as:
 
-Typical structure:
+- **Light Mode** — minimal ADAS, scoped, fast  
+- **Heavy Mode** — full ADAS governance, architectural integrity
 
-```text
-.ai/
-  00_ai-entry-point-meta-rules.md
-  01_product-vision-domain-language.local.md
-  03_tech-stack-constraints.local.md
-  04_architecture-code-organization.local.md
-  08_project-status-current-work.local.md
-  09_feature-ledger.local.md
-  10_pitfalls-invariants-danger-zones.local.md
-  11_decisions-adrs.local.md
+Task classification rules:  
+→ See `adas-usage-modes.md`
+
+Mode affects *how much* ADAS is loaded.
+
+---
+
+# 2. Load the Project Entry File
+
+Load:
+
+```
+.ai/00_ai-entry-point-meta-rules.md
 ```
 
-You must treat this directory as the **entry point** to ADAS for that repo.
+Extract:
+
+- ADAS_CORE_VERSION  
+- ADAS_PROFILE  
+- LOCAL_OVERRIDES[]  
+- ADAS repo reference  
+
+This file always loads first.
 
 ---
 
-## 2. Read `00_ai-entry-point-meta-rules.md` First
+# 3. Use `adas-config.json` to Determine Structure
 
-This file tells you:
+AI helpers must read:
 
-- The **Global ADAS repo URL**  
-- The **Global ADAS version** to assume (e.g., `v1.0`)  
-- Which Domains have project-level overlays  
+- core domain root  
+- profile domain root  
+- profile override domains  
+- non-overridable domains  
+- default profile  
+- starter template metadata
 
-From this file you learn:
-
-- That Global ADAS defines the **baseline rules**  
-- That `.local` files extend or override certain Domains for this project  
-
-You should parse this file and treat it as your **meta-configuration**.
+This file tells the helper **where** to load ADAS content from.
 
 ---
 
-## 3. Understand Global vs Local ADAS
+# 4. Loading Rules — Light Mode
 
-Global ADAS lives in its own repository (for example `https://github.com/AlobarQuest/ADAS`) and contains:
+In Light Mode, AI helpers must load **only the minimal subset** necessary:
 
-- `domains/Domain NN - <name> - Specification.md` (Global rules)  
-- `domains/Domain NN - <name> - Skeleton.md` (Templates)  
+1. `.ai/00_ai-entry-point-meta-rules.md`  
+2. Domain 01 — only summary  
+3. Domain 14 — naming/path summary  
+4. Primary Domain(s) relevant to the task:  
+   - Core + Profile + Local version of that Domain  
+5. Relevant code files  
 
-Projects do **not** directly fetch these files at runtime, but they are written
-with the assumption that you (AI helper) are operating under their rules.
+Do **not** load:
 
-You must:
+- All 15 Domains  
+- Full profile specs  
+- ADR history  
+- Full feature ledger  
 
-- Assume the Global Spec for each Domain is the **source of truth**.  
-- Treat project `.local` files as overlays that specialize those rules.
-
----
-
-## 4. Determine Which Domains Are Relevant to the Task
-
-For any given request, decide which Domains matter. For example:
-
-- Changing core business logic?  
-  - Domain 02 (Vision & Language)  
-  - Domain 04 (Architecture)  
-  - Domain 09 (Feature Ledger)  
-  - Domain 10 (Invariants)  
-
-- Adding a new endpoint?  
-  - Domain 03 (Tech Stack & Constraints)  
-  - Domain 04 (Architecture)  
-  - Domain 05 (Coding Standards)  
-  - Domain 07 (Testing)  
-  - Domain 12 (Documentation)  
-
-- Changing branching/merge behavior?  
-  - Domain 06 (Workflow & CI/CD)  
-
-Always reason about **which Domains apply** before taking action.
+Light Mode → speed, small scope, minimal governance.
 
 ---
 
-## 5. Apply Precedence Rules
+# 5. Loading Rules — Heavy Mode
 
-When you encounter rules that might conflict, use this order:
+In Heavy Mode, AI helpers must load:
 
-1. **User request**, if consistent with ADAS  
-2. **Project-level `.local` overlay**  
-3. **Global ADAS Specification**  
-4. Model defaults  
+1. `.ai/00_ai-entry-point-meta-rules.md`  
+2. **All Core Domains 01–15**  
+3. **All Profile overrides** for active profile  
+4. All relevant `.local` files:
+   - Always: 03, 04, 06, 07, 10, 11, 12, 14, 15  
+5. ADRs relevant to the task  
+6. Feature ledger entries  
+7. All code files involved
 
-If a user request conflicts with ADAS:
-
-- Explain the conflict  
-- Suggest a safe alternative  
-- Ask for confirmation before performing a risky action  
-
-If a `.local` overlay conflicts with a Global rule that is explicitly marked
-non-overridable (for example, security invariants), defer to the Global rule
-and surface the inconsistency.
+Heavy Mode enforces full ADAS governance.
 
 ---
 
-## 6. Use the ADAS 4-Section Output Format
+# 6. Precedence Rules
 
-When responding to any non-trivial request, use the standard structure:
+Regardless of mode, ADAS layers load in this order:
 
-1. **Summary**  
-   - What you did or propose to do in 2–5 bullet points.
-2. **Files Touched & Changes**  
-   - List files, functions, and key edits (or planned edits).
-3. **Rationale & Alignment with ADAS**  
-   - Explain how your work aligns with relevant Domains (02, 03, 04, 05, 06, 07, 08, 09, 10, 11, etc.).
-4. **Tests**  
-   - Which tests you added or updated, or what tests should be run.
+```
+1. Core Domains
+2. Profile Domains
+3. Project .local files
+4. User request (if allowed)
+```
 
-This format is part of the Global ADAS meta-rules and must be used consistently.
+Non-overridable domains **always** enforce Core rules.
 
 ---
 
-## 7. Respect Project Status, Features, and Danger Zones
+# 7. Handling Missing or Invalid Files
 
-Before making changes, consult the relevant `.local` overlays:
-
-- `08_project-status-current-work.local.md`
-  - Look for active work, blockers, and stability zones.
-
-- `09_feature-ledger.local.md`
-  - Check if the feature already exists, is planned, or deprecated.
-
-- `10_pitfalls-invariants-danger-zones.local.md`
-  - Re-read invariants and danger zones before touching related code.
-
-- `11_decisions-adrs.local.md`
-  - Check for existing project-level decisions that affect your task.
-
-Use this information to avoid:
-
-- Stepping on in-progress changes  
-- Reintroducing known bugs  
-- Violating invariants  
+Same as before:  
+- Missing meta file → cannot proceed  
+- Missing config file → fallback to core-only mode  
+- Malformed `.local` → ignore invalid rules, warn  
+- Unknown profile → fallback to default profile  
 
 ---
 
-## 8. When to Suggest ADRs or Updates
+# 8. Summary
 
-You should propose:
+AI helpers must:
 
-- An **ADR** (Domain 11) when:
-  - A change affects architecture, stack, or long-term behavior.
+- Choose Light vs Heavy mode  
+- Load the appropriate ADAS layers  
+- Respect non-overridable domains  
+- Apply Profile and `.local` overrides  
+- Validate all outputs against loaded rules  
 
-- **Updates to `.local` files** when:
-  - You introduce a new feature (update Feature Ledger).  
-  - You change an invariant or discover a new danger zone.  
-  - Project status meaningfully changes.
-
-Use the **Skeleton** files in the Global ADAS repo as templates when preparing
-new ADRs or updates.
-
----
-
-## 9. Summary for AI Helpers
-
-When working in an ADAS-enabled project:
-
-1. Load `.ai/00_ai-entry-point-meta-rules.md` first.  
-2. Assume the declared Global ADAS version as your baseline.  
-3. Apply project `.local` overlays for relevant Domains.  
-4. Use the ADAS 4-section output format.  
-5. Check Status, Feature Ledger, Pitfalls, and ADRs before major changes.  
-6. Surface conflicts instead of silently ignoring ADAS rules.
-
-If you follow this process, you will behave like a disciplined member of a
-well-governed engineering team, not an isolated code generator.
+See:  
+→ `adas-usage-modes.md`  
+for full mode classification and rules.

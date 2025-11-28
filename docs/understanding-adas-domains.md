@@ -1,213 +1,368 @@
+# Understanding ADAS Domains  
+**Complete, Profile-Aware, Production-Ready Edition**
+
+ADAS (AI Development Assistant System) is organized into **15 Domains**, each defining a distinct area of governance for AI helpers and project structure. Domains form the “mental architecture” that keeps AI-driven development consistent, predictable, and aligned with your long‑term goals.
+
+This document explains each Domain, how Core and Profile layers interact, and how project-level overrides work.
+
 ---
-title: Understanding ADAS Domains
-layout: default
-nav_order: 20
-description: High-level explanation of each ADAS Domain, what belongs in its Specification, and examples of project-specific content.
+
+# 1. How ADAS Domains Work
+
+ADAS uses a **three‑layer model**:
+
+## **Layer 1 — Core Domains**
+Located at:
+```
+domains/core/
+```
+Core Domains apply to *all projects*. They define baseline reasoning patterns, architecture principles, workflows, and governance.
+
+## **Layer 2 — Profile Domains**
+Located at:
+```
+domains/profiles/<profile-name>/
+```
+Profiles specialize ADAS for different development types.  
+Examples:
+
+- `web-app` (stable)
+- `desktop-app` (experimental)
+- `mobile-ios` (planned)
+
+Each profile may override or extend certain Core Domains:
+
+- Domain 03 – Tech Stack & Constraints  
+- Domain 04 – Architecture  
+- Domain 06 – Testing & Quality  
+- Domain 12 – Security & Secrets  
+
+## **Layer 3 — Project `.local` Overlays**
+Located in each project repo:
+```
+.ai/NN_filename.local.md
+```
+These files adapt ADAS rules to the specific project.
+
 ---
 
-# Understanding ADAS Domains
+# 2. Domain Precedence
 
-This document explains the purpose of every ADAS Domain, what information belongs in its Specification file, and examples of how a project might customize or extend each Domain.
+When AI helpers load ADAS, Domains apply in this order:
 
-## Domain 01 – AI Entry Point & Meta-Rules
+1. **User Request** (only if consistent with ADAS)  
+2. **Project `.local` rules**  
+3. **Active Profile rules** (web‑app, desktop‑app, etc.)  
+4. **ADAS Core**  
+5. **Model Defaults**
 
-### Purpose
-Defines how AI helpers think, behave, reason, and load ADAS globally + locally.
+If a Domain is listed as **non‑overridable** in `adas-config.json`, `.local` overrides cannot change it.
 
-### What belongs here
-- AI reasoning rules  
-- Output-format requirements  
-- Conflict-resolution rules  
-- Policies for loading Global ADAS then project overlays  
+---
 
-### Example
-“AI helpers must use the 4‑section ADAS output format and halt when a user request violates a higher‑priority Domain.”
+# 3. Domain Summaries (Core + Profile-Aware)
 
-## Domain 02 – Product Vision & Domain Language
+Below is a complete, authoritative explanation of each Domain.
 
-### Purpose
-Provides the “why” of the project and defines its domain vocabulary.
+---
 
-### What belongs here
-- Vision  
-- Personas  
-- Domain terms  
-- Naming guidelines  
+## **Domain 01 — AI Entry Point & Meta‑Rules**
 
-### Example
-Target persona: “First‑time home buyers who need guided workflows.”
+**Purpose:**  
+Define how AI helpers enter, interpret, and apply ADAS.
 
-## Domain 03 – Tech Stack & Constraints
+**Topics:**
+- How context files load (`00 → 14`)  
+- Definitions of “Core”, “Profile”, and “Local” governance layers  
+- Non‑overridable behaviors (structured output, rationale, reasoning model)  
+- Safety, determinism, and consistent behavior across sessions  
 
-### Purpose
-Defines allowed, preferred, required, and forbidden technologies.
+**Profile Impact:**  
+None — always Core.
 
-### What belongs here
-- Required stack  
-- Preferred stack  
-- Forbidden dependencies  
-- Version rules  
+---
 
-### Example
-Required: React 18 + FastAPI + PostgreSQL  
-Forbidden: Redux, MongoDB
+## **Domain 02 — Product Vision & Domain Language**
 
-## Domain 04 – Architecture & Code Organization
+**Purpose:**  
+Define how a project should communicate its goals, vocabulary, feature boundaries, and shared mental models.
 
-### Purpose
-Defines the project’s structure, layers, and boundaries.
+**Topics:**
+- Domain‑specific terminology  
+- Project vision & North Star  
+- Naming conventions  
+- How AI helpers interpret ambiguous language  
 
-### What belongs here
-- Layers  
-- Folder layout  
+**Profile Impact:**  
+None — always Core.
+
+---
+
+## **Domain 03 — Tech Stack & Constraints**
+
+**Purpose:**  
+Define the preferred technologies and constraints the AI should follow.
+
+**Core Topics:**
+- Categories of acceptable tech  
 - Dependency rules  
+- Environment configuration  
+- Avoiding unnecessary libraries  
+
+**Profile Overlays Allowed:**  
+✔ web‑app  
+✔ desktop‑app  
+✔ mobile‑ios  
+
+**Example web‑app overrides:**
+- Recommended frameworks (Next.js, React)  
+- Backend platform (e.g., Supabase)  
+- Build / bundler choices  
+
+---
+
+## **Domain 04 — Architecture & Code Organization**
+
+**Purpose:**  
+Define the structural principles of the codebase.
+
+**Core Topics:**
+- Separation of concerns  
+- Domain vs infrastructure layers  
+- File and folder segmentation  
+- Avoiding business logic leakage into UI/API handlers  
+- Modularity and composability  
+
+**Profile Overlays Allowed:**  
+✔ web‑app  
+✔ desktop‑app  
+✔ mobile‑ios  
+
+**Example web‑app overrides:**
+- Suggested folder layout  
+- API handler patterns  
+- Client/server separation rules  
+
+---
+
+## **Domain 05 — Coding Style, Patterns & Security Guardrails**
+
+**Purpose:**  
+Define implementation‑level expectations.
+
+**Topics:**
+- Coding patterns and anti‑patterns  
+- Error handling  
+- Performance considerations  
+- Logging conventions  
+- Basic security posture (never commit secrets, sanitize inputs, etc.)
+
+**Profile Impact:**  
+Mostly Core; minor profile extensions possible.
+
+---
+
+## **Domain 06 — Testing & Quality**
+
+**Purpose:**  
+Define testing expectations and quality gates.
+
+**Core Topics:**
+- Automated testing minimums  
+- Unit vs integration tests  
+- What must be tested before merging  
+- Required test tooling presence  
+
+**Profile Overlays Allowed:**  
+✔ web‑app  
+✔ desktop‑app  
+✔ mobile‑ios  
+
+**Example web‑app overrides:**
+- Test runner defaults  
+- Component testing guidance  
+- Supabase mocking strategies  
+
+---
+
+## **Domain 07 — Workflow, Git, and Code Review**
+
+**Purpose:**  
+Define how work is organized and merged.
+
+**Topics:**
+- Branch naming patterns  
+- PR rules  
+- Commit conventions  
+- Review process (AI‑assisted reviews, structured summaries)  
+- Conflict resolution behaviors  
+
+**Profile Impact:**  
+None — always Core.
+
+---
+
+## **Domain 08 — Project Status / Current Work**
+
+**Purpose:**  
+Describe how AI helpers track current work, tasks, and project status.
+
+**Topics:**
+- Status file structure  
+- “Current task” tracking  
+- In‑progress work rules  
+
+**Profile Impact:**  
+None — always Core.
+
+---
+
+## **Domain 09 — Feature Ledger**
+
+**Purpose:**  
+Track features: proposed, planned, active, completed.
+
+**Topics:**
+- Feature metadata  
+- Requirements tracking  
+- Linking features to ADRs and code regions  
+
+**Profile Impact:**  
+None — always Core.
+
+---
+
+## **Domain 10 — Pitfalls, Invariants & Danger Zones**
+
+**Purpose:**  
+Document major project risks and areas prone to errors.
+
+**Topics:**
+- Architectural invariants  
+- Known failure modes  
+- Danger zones requiring special caution  
 - Cross‑cutting concerns  
 
-### Example
-“Domain layer must never import infrastructure or UI.”
+**Profile Impact:**  
+Profiles may append platform‑specific pitfalls.
 
-## Domain 05 – Coding Standards
+---
 
-### Purpose
-Defines formatting, naming, logging, and error-handling conventions.
+## **Domain 11 — Decisions / ADRs**
 
-### What belongs here
-- Indentation rules  
-- File naming conventions  
-- Logging standards  
-- Comment/documentation expectations  
+**Purpose:**  
+Document important decisions in an architectural decision record (ADR) format.
 
-### Example
-Global indent: 2 spaces.
+**Topics:**
+- Decision template  
+- How to justify and document decisions  
+- How prior decisions shape future reasoning  
+- How to reference ADRs inside PRs  
 
-## Domain 06 – Code Workflow, Branching Strategy & CI/CD
+**Profile Impact:**  
+None — always Core.
 
-### Purpose
-Defines how code moves from branch → PR → merge → deploy.
+---
 
-### What belongs here
-- Branch naming  
-- PR requirements  
-- Forbidden actions  
-- Preview deployment behavior  
+## **Domain 12 — Security & Secrets**
 
-### Example
-“After v1.0, never work directly on `main`. Always create a feature branch and a PR that triggers Cloudflare preview URLs.”
+**Purpose:**  
+Define required security posture and secret‑handling rules.
 
-## Domain 07 – Testing Strategy & Quality Gates
+**Core Topics:**
+- Never commit secrets  
+- Env‑based configuration  
+- Role‑based access expectations  
+- Authorization & authentication patterns  
 
-### Purpose
-Ensures the project is well tested and regression-proof.
+**Profile Overlays Allowed:**  
+✔ web‑app  
+✔ desktop‑app  
+✔ mobile‑ios  
 
-### What belongs here
-- Unit/integration/E2E rules  
-- Required coverage  
-- Test folder structure  
+**Example web‑app overrides:**
+- Supabase key handling  
+- Token/session storage methods  
 
-### Example
-“All bug fixes require a regression test.”
+---
 
-## Domain 08 – Project Status & Current Work
+## **Domain 13 — Templates & Interaction Model**
 
-### Purpose
-Provides situational awareness so AI helpers don’t conflict with active work.
+**Purpose:**  
+Define templates AI helpers use to produce consistent outputs.
 
-### What belongs here
-- Current status  
-- Active work items  
-- Blockers  
-- Stability map (stable, unstable, frozen)  
+**Topics:**
+- Output formats  
+- Engineering proposal templates  
+- PR templates  
+- Summary structures  
+- Test plan templates  
 
-### Example
-“/src/infrastructure/payments is unstable—refactor in progress.”
+**Profile Impact:**  
+Mostly Core, but profiles may extend templates.
 
-## Domain 09 – Feature Ledger
+---
 
-### Purpose
-Tracks features across lifecycle states.
+## **Domain 14 — ADAS File Organization & Naming**
 
-### What belongs here
-- Feature schema  
-- Feature states  
-- Links to ADRs, PRs  
+**Purpose:**  
+Define how ADAS files are structured and named.
 
-### Example
-FEAT‑008: “Implement multi‑step onboarding” → in_progress.
+**Now Includes (after multi‑profile upgrade):**
+- Core domain location (`domains/core/`)  
+- Profile overlays (`domains/profiles/<profile>/`)  
+- Project `.ai/` structure  
+- Skeleton file naming rules  
+- Integration with `adas-config.json`  
 
-## Domain 10 – Pitfalls, Invariants & Danger Zones
+**Profile Impact:**  
+None in structure; profiles live under designated subfolders.
 
-### Purpose
-Captures invariants, recurring bugs, or fragile areas.
+---
 
-### What belongs here
-- Data invariants  
-- Recurring issues  
-- Danger zones  
+## **Domain 15 — ADAS Overview & Maintenance**
 
-### Example
-“Invariant: User IDs must be UUIDv4.”
+**Purpose:**  
+Define how ADAS evolves.
 
-## Domain 11 – Decisions & ADRs
+**Now Includes:**
+- Core + profile versioning  
+- `adas-config.json` governance  
+- How tools/AI helpers must read configuration  
+- Upgrade paths for projects  
+- Rules for maintaining consistency across ADAS domains  
 
-### Purpose
-Defines how architectural decisions are created, updated, linked, and deprecated.
+**Profile Impact:**  
+Profiles affect versioning but not Domain structure.
 
-### What belongs here
-- ADR process  
-- ADR structure  
-- Superseding rules  
+---
 
-### Example
-ADR‑0003 supersedes ADR‑0001.
+# 4. Links to Related Documentation
 
-## Domain 12 – Documentation & Knowledge Base
+- **ADAS Profiles & Config (critical for multi‑profile ADAS):**  
+  → [`adas-profiles-and-config.md`](adas-profiles-and-config.md)
 
-### Purpose
-Ensures consistent documentation quality.
+- **ADAS File Specifications Overview:**  
+  → [`ADAS-file-specifications-overview.md`](ADAS-file-specifications-overview.md)
 
-### What belongs here
-- Required doc types  
-- Format expectations  
-- Update rules alongside code  
+- **Wiki Edition Specification Index:**  
+  → [`ADAS-file-specification-overview-wiki.md`](ADAS-file-specification-overview-wiki.md)
 
-### Example
-“All API endpoints require example requests + responses.”
+- **How AI Helpers Load ADAS Context:**  
+  → [`for-ai-helpers-how-to-load-adas-context.md`](for-ai-helpers-how-to-load-adas-context.md)
 
-## Domain 13 – Security & Compliance
+---
 
-### Purpose
-Defines global security posture.
+# 5. Summary
 
-### What belongs here
-- Auth rules  
-- Secrets management  
-- Encryption and network defaults  
+This document provides the complete mental model of ADAS Domains:
 
-### Example
-“All cookies must be HttpOnly + Secure.”
+- Clear Core vs Profile boundaries  
+- Explicit override rules  
+- Project `.local` behavior  
+- Domain purposes and responsibilities  
+- How to navigate and maintain the system across project types  
 
-## Domain 14 – ADAS Global Governance
+Every ADAS rule, profile, and decision ultimately attaches to one of these Domains.
 
-### Purpose
-Defines how Global ADAS itself is updated and versioned.
-
-### What belongs here
-- Version semantics  
-- Breaking-change rules  
-- Non-overridable domains  
-
-### Example
-“Domain 01 may never be overridden at the project level.”
-
-## Domain 15 – Project Adoption, Overrides & Version Binding
-
-### Purpose
-Defines how projects adopt ADAS and declare overrides.
-
-### What belongs here
-- How projects bind ADAS versions  
-- `.local` overlay rules  
-- Migration rules  
-
-### Example
-“This project uses Global ADAS v1.0 with local overrides in Domains 02, 03, and 04.”
+Understanding this hierarchy is essential for both humans and AI helpers interacting with ADAS at any level.

@@ -1,63 +1,135 @@
----
-title: ADAS Documentation Home
-layout: default
-nav_order: 1
-description: Entry point for Devon's Global ADAS documentation.
----
-
 # ADAS Documentation Home
 
-Welcome to the documentation for **ADAS — the AI Development Assistant System**.
+Welcome to the documentation for the **AI Development Assistant System (ADAS)** — a governance, reasoning, and consistency framework that empowers Devon and Devon’s AI helpers to collaborate predictably across all software projects.
 
-This site is the human-friendly and AI-friendly entry point for understanding how
-Devon's Global ADAS works, how projects adopt it, and how AI helpers are expected
-to behave across all repos.
+ADAS enables:
 
----
-
-## Start Here
-
-If you're new to ADAS, read these first:
-
-1. **Understanding ADAS Domains**  
-   A high-level explanation of each ADAS Domain, what belongs in its Specification,
-   and examples of project-specific content.  
-   👉 [Understanding ADAS Domains](./understanding-adas-domains.md)
-
-2. **ADAS File Specifications Overview**  
-   A concise explanation of each Domain Specification file and how it is used.
-   👉 [ADAS File Specifications Overview](./ADAS-file-specifications-overview.md)
+- Stable, consistent architectural decisions  
+- Clear expectations for code quality  
+- Predictable behavior across all AI helpers  
+- Safe, structured evolution of software systems  
+- Reduced drift and reduced “AI chaos”  
+- Multi‑profile support (web-app, desktop-app, mobile-ios)
 
 ---
 
-## Additional Views
+# 1. About ADAS
 
-- **Wiki-Style Overview of Specifications**  
-  A version of the file-spec overview formatted for use in a wiki or more narrative docs.  
-  👉 [ADAS File Specifications Overview (Wiki Edition)](./ADAS-file-specifications-overview-wiki.md)
+ADAS is structured into three layers:
 
----
+1. **Core** — global rules for all projects  
+2. **Profiles** — specialization per project type (e.g., web-app)  
+3. **Project `.local`** — project-level overrides and metadata  
 
-## How This Docs Folder Is Used
+A single machine-readable configuration file (`adas-config.json`) defines:
 
-- Place this `docs/` folder in the root of your `ADAS` repository.
-- In GitHub, enable **GitHub Pages** for this repo and set the source to:
-  - **Branch:** `main` (or your default branch)  
-  - **Folder:** `/docs`
-- Optionally choose a theme that supports Jekyll front matter (e.g., *minimal* or *just-the-docs*).
-
-Once enabled, your ADAS documentation site will open on this page by default,
-with navigation links into the key explainer documents.
+- core version  
+- active profiles  
+- override domains  
+- starter templates  
+- non-overridable rules  
 
 ---
 
-## For AI Helpers
+# 2. Key Documents
 
-[AI Helpers Read Me](./for-ai-helpers-how-to-load-adas-context.md)
+### Core Learning Path
 
-When acting as an AI helper in a project that uses Global ADAS:
+- **Understanding ADAS Domains**  
+  → `understanding-adas-domains.md`
 
-- Treat this site as the **narrative explanation** of the ADAS system.
-- Treat the `/domains` directory in the repo as the **authoritative source of rules**.
-- Use the examples here to better understand how to populate project-level overlays
-  and how to interpret the intent behind each Domain.
+- **ADAS File Structure and Specifications**  
+  → `ADAS-file-specifications-overview.md`
+
+- **Wiki Overview (Human-friendly Map)**  
+  → `ADAS-file-specification-overview-wiki.md`
+
+- **How to Load ADAS as an AI Helper**  
+  → `for-ai-helpers-how-to-load-adas-context.md`
+
+- **Profile & Config Guide**  
+  → `adas-profiles-and-config.md`
+
+- **Usage Modes: Light vs Heavy**  
+  → `adas-usage-modes.md`
+
+---
+
+# 3. Profiles
+
+ADAS supports different Profiles for different project types.  
+Current Profile set:
+
+- **web-app** (stable)  
+- desktop-app (experimental)  
+- mobile-ios (planned)  
+
+Each Profile overrides specific Domains.
+
+See:  
+→ `domains/profiles/<profile>/`
+
+---
+
+# 4. ADAS Starter Templates
+
+Each profile includes a starter `.ai` folder for new projects.
+
+Example:  
+```
+starters/web-app/.ai/
+```
+
+---
+
+# 5. Versioning and Maintenance
+
+ADAS supports semantic versioning:
+
+- MAJOR — breaking changes  
+- MINOR — additive, non-breaking changes  
+
+All changes must be recorded via ADRs and must update:
+
+- Domain 15  
+- relevant Domains  
+- starter templates  
+- adas-config.json  
+- docs pages  
+
+---
+
+# 6. How to Use ADAS Day-to-Day
+
+AI helpers use two modes:
+
+- **Light Mode** — small scoped tasks, minimal ADAS loading  
+- **Heavy Mode** — architecture, security, and large changes
+
+See:  
+→ `adas-usage-modes.md`
+
+---
+
+# 7. Contributing / Evolving ADAS
+
+ADAS evolves through structured processes:
+
+- Write an ADR (Domain 11)  
+- Update Profile or Core Domains  
+- Update Skeletons  
+- Update Starter Templates  
+- Bump Versions  
+- Update Documentation  
+
+---
+
+# 8. Summary
+
+ADAS is a powerful, structured operational framework for AI-assisted development.  
+It reduces chaos, improves predictability, and enforces the standards Devon wants across all projects.
+
+Start exploring by reading:
+
+- `adas-usage-modes.md`  
+- `for-ai-helpers-how-to-load-adas-context.md`

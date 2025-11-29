@@ -8,6 +8,10 @@
 This Domain defines how significant decisions are documented so they can be understood and respected in the future.
 It prevents re-arguing settled questions and preserves the reasoning behind key choices.
 
+### 1.1 ADR Location (Global Convention)
+- Store ADRs under `docs/ADRS/` (or `docs/adrs/` if lowercase paths are enforced). This keeps governance artifacts predictable and separate from source code and operational docs.
+- References in ADAS overlays and tooling should point to this path. If a project must deviate, document the override in the project’s Domain 11 `.local` file and update references accordingly.
+
 ## 2. Scope & Responsibilities
 - Covers:
   - Architecture decisions.

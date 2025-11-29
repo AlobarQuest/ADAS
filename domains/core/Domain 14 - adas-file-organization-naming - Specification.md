@@ -99,6 +99,11 @@ Domain <##> - <title> (<profile>).md
 - **Starter templates** live in `/starters/<profile>/.ai/`
 - **Config** lives in `adas-config.json` at repository root
 
+## 5.1 Docs vs ADAS content ownership
+- **ADAS/ADRs are authoritative** for rules, constraints, workflows, security posture, and architecture decisions. Any binding guidance belongs in Core/Profile/Local ADAS files or ADRs.
+- **`/docs/` is informational**: product/user guides, external-facing API refs, diagrams, status reports, exports, and narrative onboarding. These must not define governance or security rules; they should point back to ADAS/ADRs when describing authoritative behavior.
+- Avoid drift by keeping `/docs/` declarative and non-binding; when rules change, update ADAS/ADRs and let `/docs/` reference them.
+
 These rules allow AI helpers to reliably find the correct files for both Light and Heavy modes.
 
 ---

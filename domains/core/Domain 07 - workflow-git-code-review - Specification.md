@@ -26,6 +26,7 @@ It standardizes branching, commits, pull requests, and review expectations so th
 ## 4. Operational Guidelines for AI Helpers
 - Branches:
   - Follow the documented naming scheme (e.g., `feature/...`, `bugfix/...`).
+  - If project version is **1.0 or higher**, always do work on a branch (no direct commits to the default/main branch).
 - Commits:
   - Use the expected subject format and optional tags (e.g., `[feat]`, `[fix]`).
   - Group related changes; avoid “mixed purpose” commits.

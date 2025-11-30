@@ -10,10 +10,11 @@ Describe this project's architectural structure and folder layout, in relation t
 
 ## Folder Structure
 
-```text
-src/
-  ...
-```
+Repo Level Folder
+  - docs/ - Contains user/app related documentation - not AI helper docs
+  - docs/development - Contains application development documents
+  - docs/plans - contains intermediate or task/feature development plans used during developement.
+  - docs/plans/completed - contains intermediate or task/feature developement plans that have been completed
 
 ## Layers & Boundaries
 

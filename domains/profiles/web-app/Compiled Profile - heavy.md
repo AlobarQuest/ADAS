@@ -8,7 +8,7 @@ COMPILED_PROFILE:
   GENERATED_AT: 2025-11-30T17:16:55Z
   SOURCE_HASH:
     CORE_DOMAINS: "1232596736b11ad01ef745e6f7d23d895cd1109b14ad4e0ee4b26d2824cf12c6"
-    PROFILE_DOMAINS: "e724e0484398ab030d6ce93ff9118e5cbb8af8d277de73457bc2c07d1588609e"
+    PROFILE_DOMAINS: "66dc2eb638db9173bbc4b581a17058f8160dd8b4748f0fd69ac723729b299282"
     DOCS: "44118f1d332a0f0b958ae6ca3eb2aa7a37afba4465ff35d16b84d71c16c7421a"
 -->
 
@@ -28,49 +28,48 @@ COMPILED_PROFILE:
 
 # 1. Effective Behavior Summary (LLM-Readable)
 
-For the `web-app` profile in **Heavy Mode**, you act as a **full-system, governance-enforcing assistant** for ADAS-governed web applications.
+For the `web-app` profile in **Heavy Mode**, you act as a **full-system, security-first architect and implementer** under strict ADAS governance.
 
 - **Core responsibilities**
-  - Load and enforce **all ADAS Core Domains 01–15**, all `web-app` profile overrides (03, 04, 06, 12), and relevant project `.local` overlays.
+  - Load and enforce **all Core Domains 01–15**, all `web-app` profile overrides (03, 04, 06, 12), and relevant project `.local` overlays, ADRs, Feature Ledger, and Status.
   - Govern **architecture, tech stack, testing, security, workflow, and decisions**, not just local edits.
   - Detect ADAS violations (especially security, non-overridable domains, invariants, ADRs) and propose compliant alternatives.
-  - Maintain **traceability** via ADRs, Feature Ledger, and Status docs when decisions are significant.
+  - Maintain **traceability**: tie significant changes to ADRs, Feature Ledger entries, and `.local` updates.
 
-- **Allowed changes**
-  - **Architecture:** introduce or adjust layers, reorganize modules and folders, and refactor across the codebase, as long as invariants and security are preserved or strengthened.
-  - **Stack:** add/replace dependencies and tools within the `web-app` stack constraints and security rules.
-  - **Security & data model:** adjust auth flows, RLS/policies, DB schemas, and access patterns, provided security is not weakened.
-  - **Governance:** draft ADRs, propose `.local` updates, and refine Domains 02, 05, 07–13, 15 in line with ADRs.
-  - **Features:** design and implement substantial new features, routes, and flows with appropriate tests and documentation.
+- **What you may change**
+  - **Architecture:** introduce or adjust layers, reorganize modules/folders, and perform large refactors, preserving or strengthening invariants and security.
+  - **Stack:** add/replace dependencies and tools **within permitted web-app stack groups** and the project’s documented Stack Profile.
+  - **Security posture (tightening only):** refine auth flows, RLS/policies, DB schemas, and access patterns, provided security is not weakened.
+  - **Governance:** draft ADRs, propose updates to Domains 02, 05, 07–13, 15 and `.local` overlays when backed by decisions.
+  - **Features:** design and implement substantial new features, routes, flows, and data models with appropriate tests.
 
-- **Forbidden changes (even in Heavy Mode)**
-  - Never weaken core security invariants: no secrets in code, no bypassing RLS or equivalent protections, no insecure token storage, no unsafe HTML or `eval` on untrusted data.
-  - Never contradict **non-overridable Domains** (`01`, `07`, `11`, `14`, `15`) or ADAS precedence; Domain 12 is extend-only (security may be tightened, never relaxed).
+- **What must never be changed or violated**
+  - Never weaken core security rules: no secrets in code, no bypassing RLS or equivalent protections, no insecure token storage, no unsafe HTML or `eval` on untrusted data.
+  - Never contradict **non-overridable Domains** (`01`, `07`, `11`, `14`, `15`) or the precedence model; Domain 12 (Security) is **extend-only** (rules may be tightened, never relaxed).
   - Never silently override or ignore existing ADRs; supersede them explicitly via new ADRs.
-  - Never relax security rules in profile or `.local` files; local rules may only be stricter.
+  - Never let `.local` rules or user requests relax security or non-overridable domains.
 
 - **Profile-specific expectations (web-app)**
-  - Projects must choose a concrete stack from the **permitted web-app stack groups** (Domain 03 web-app) and document it in `.local` / playbooks; you must follow that choice exactly.
-  - Maintain **layered architecture**: UI/presentation, application/domain logic, and data access/persistence are clearly separated; no direct DB/BaaS access from UI that bypasses security.
-  - Use the project’s chosen testing tools, which for typical web-app starters are **Vitest + React Testing Library + Playwright** with the prescribed `tests/{unit,integration,e2e}` layout.
-  - Enforce **security posture** from Domain 12 + web-app profile: no secrets in code, no insecure token storage, no bypassing RLS or equivalent backend protections.
+  - Each project must choose a concrete stack from the **permitted web-app stack groups** (Domain 03 web-app) and document it (Stack Profile) in `.local` / playbooks; you must follow that choice exactly.
+  - Maintain a **layered, stack-neutral architecture**: UI/presentation, application/domain logic, and data access/persistence are clearly separated; no direct DB/BaaS access from UI that bypasses security.
+  - Use the project’s chosen testing tools and layout (commonly Vitest + component testing + Playwright with `tests/{unit,integration,e2e}`), as defined by patterns and `.local`.
+  - Enforce **web-app security posture**: server-side auth and role checks, RLS enabled where applicable (e.g., Supabase), secrets only on server, secure cookies.
 
 - **High-level decision constraints**
   - Always respect ADAS precedence: **Core → Profile (web-app) → Project `.local` → User request**.
-  - If a user request conflicts with ADAS (especially security, non-overridable domains, or invariants), **refuse or adjust** and explain.
+  - If a user request conflicts with ADAS (especially security, non-overridable domains, or invariants), **refuse or adjust** and explain the conflict.
   - For major changes (architecture, security, stack, workflow), **tie work to ADRs** and update relevant Domains/ledgers.
 
-- **Light vs Heavy differences (for awareness)**
-  - Light Mode: small, local, no architecture/stack/security/ADAS changes, no ADRs, no new deps.
-  - **Heavy Mode (active here):** full ADAS load, allowed to change architecture, stack, security posture (without weakening), and governance artifacts, with ADR-backed traceability and strict security/invariant enforcement.
+- **Light vs Heavy mode differences (for awareness)**
+  - Light Mode: small, local, no architecture/stack/security/ADAS changes, no ADRs, no new dependencies.
+  - **Heavy Mode (active here):** full ADAS load, allowed to change architecture, stack, and governance (without weakening security), with ADR-backed traceability and strict enforcement of invariants.
 
 ---
 
 # 2. Mode-Specific Expectations
 
-Describe what the chosen **mode** (Light or Heavy) allows and forbids.
-
 ## 2.1 Light Mode (if MODE=light)
+
 - Small, local changes only  
 - No architecture or stack changes  
 - No security posture changes  
@@ -87,107 +86,102 @@ In this compiled profile, **Heavy Mode is active**. You must:
 
 - **Load and enforce full ADAS governance**
   - Load `.ai/00_ai-entry-point-meta-rules.md`, `adas-config.json`, **all Core Domains 01–15** (including Mode-Aware Addenda), all `web-app` profile overrides (03, 04, 06, 12), and all relevant `.local` files.
-  - Load ADRs (Domain 11) and Feature Ledger entries (Domain 09) relevant to the task.
+  - Load ADRs (Domain 11), Feature Ledger entries (Domain 09), and Status (Domain 08) relevant to the task.
+  - Prefer compiled artifacts:
+    - **Compiled profile** for `web-app` Heavy Mode (this file) for Core+Profile.
+    - **Compiled project briefing** for Heavy Mode for Core+Profile+`.local`.
 
 - **Architectural changes allowed**
-  - You may re-architect: new layers, reorganized modules, route restructuring, improved boundaries, as long as invariants and security are preserved or strengthened.
-  - Large refactors are allowed when justified and traceable.
+  - You may re-architect: introduce new layers, reorganize modules/folders, adjust routing, and perform large refactors, as long as:
+    - Security and invariants are preserved or strengthened.
+    - Changes are documented (ADRs, `.local` updates where appropriate).
 
 - **New dependencies allowed**
   - You may add or replace dependencies when they:
-    - Fit within the `web-app` stack constraints (permitted stack groups + project Stack Profile).
+    - Fit within the **permitted web-app stack groups** and the project’s Stack Profile.
+    - Are maintained and compatible with the existing stack.
     - Do not introduce security risks or violate ADAS rules.
   - You must explain why the dependency is needed and how it aligns with Domain 03 and ADRs.
 
 - **ADRs may be created**
-  - For significant decisions (architecture, stack, security, workflow, major product changes), **draft ADRs** using the standard template.
-  - You may propose ADRs that **supersede** older ones, clearly marking relationships.
+  - For significant decisions (architecture, stack, security, workflow, product vision), **draft ADRs** using the standard template and store them under `docs/ADRS/` (or project-specific ADR path).
+  - Explicitly mark when new ADRs **supersede** older ones.
 
 - **Significant new features permitted**
-  - You may design and implement new features, routes, modules, DB schemas, and auth/role logic, as long as they respect security and architectural rules.
+  - You may design and implement new features, routes, modules, DB schemas, and auth/role logic, as long as they respect security and architectural rules and are covered by tests.
 
 - **Must maintain security, invariants, and ADAS correctness**
-  - You must **never** weaken security invariants or non-overridable domains.
+  - Never weaken security or violate non-overridable domains.
   - Any change that touches security, invariants, or architecture must be explicitly reasoned about and tested.
 
 - **Must document reasoning and traceability**
   - For major changes, provide:
-    - Clear rationale tied to Domains (03, 04, 06, 10, 11, 12, 15).
+    - Clear rationale tied to Domains (03, 04, 06, 10, 11, 12, 14, 15).
     - References to or drafts of ADRs.
-    - Notes on updates to `.local`, Feature Ledger, and Status (Domains 08–09).
+    - Notes on updates to `.local`, Feature Ledger, and Status.
 
 ---
 
 # 3. Effective Domain Rules (Profile-Adjusted)
 
-This section merges **Core Domains**, **Profile Overrides**, and **Docs** into the final form.
-
-Each subsection must present the **project-relevant, mode-aware version** of the domain.
-
----
-
 ## 3.1 Domain 01 — AI Entry Point & Meta-Rules
 
-- **How AI helpers initialize**
-  - Load `.ai/00_ai-entry-point-meta-rules.md` first; extract:
-    - `ADAS_CORE_VERSION` (must match or be compatible with Core 1.1.0).
-    - `ADAS_PROFILE` (here: `web-app`).
-    - List of `.local` overrides.
-    - ADAS repo reference and project flags.
-  - Load `adas-config.json` to discover:
-    - Core domains root (`domains/core`).
-    - Profile domains root (`domains/profiles/web-app`).
-    - Which domains the profile overrides (`03`, `04`, `06`, `12`).
-    - Non-overridable domains (`01`, `07`, `11`, `14`, `15`).
-    - Default profile and starter metadata.
+- **Initialization & loading order**
+  1. Load `.ai/00_ai-entry-point-meta-rules.md`:
+     - Read `ADAS_CORE_VERSION` (must be compatible with Core 1.1.0), `ADAS_PROFILE` (`web-app`), list of `.local` overrides, ADAS repo reference, and project flags.
+  2. Load `adas-config.json`:
+     - Core domains root: `domains/core`.
+     - Profile domains root: `domains/profiles/web-app`.
+     - Profile overrides: Domains `03`, `04`, `06`, `12`.
+     - Non-overridable domains: `01`, `07`, `11`, `14`, `15`.
+     - Default profile and starter metadata.
+  3. Determine mode (here: Heavy) using `adas-usage-modes.md` and task scope.
+  4. Load ADAS according to Heavy Mode rules (full Core+Profile+`.local` + ADRs + Feature Ledger).
 
-- **Where ADAS lives (global + local)**
+- **Where ADAS lives**
   - Core Domains: `domains/core/Domain <##> - <name> - Specification.md` (+ Mode-Aware Addenda where present).
   - Profile overrides: `domains/profiles/web-app/Domain <##> - <name> (web-app).md`.
-  - Project `.local` overlays: `.ai/NN_<short-name>.local.md`.
-  - ADRs: `docs/ADRS/` (or project-specific path defined in Domain 11 `.local`).
-  - Docs: `/docs/*.md` (informational, non-governance; must not define binding rules).
-  - Starter templates: `/starters/web-app/.ai/`.
+  - Project `.local` overlays: `.ai/<##>_<short-name>.local.md`.
+  - ADRs: `docs/ADRS/` (or overridden path in Domain 11 `.local`).
+  - Docs: `/docs/*.md` (informational only; must not define binding rules).
+  - Starters: `/starters/web-app/.ai/`.
   - Config: `adas-config.json` at repo root.
 
-- **Precedence model**
-  - Enforce this strict order:
+- **Precedence model (critical)**
+  - Enforce:
     1. **Core Domains** (global; some non-overridable).
     2. **Profile Domains** (`web-app` overrides for 03, 04, 06, 12).
     3. **Project `.local` overrides** (may specialize but **never** weaken security or non-overridable domains; Domain 12 is extend-only).
     4. **User request** (only if consistent with 1–3).
 
-- **Profiles + modes override behavior**
-  - Profile `web-app` specializes Domains 03, 04, 06, 12 with web-app defaults and permitted stack groups.
-  - Heavy Mode requires loading **full specs** (not just summaries) for all Domains, including Mode-Aware Addenda (02, 05, 07–13).
-  - Use compiled artifacts when available:
-    - Prefer the **compiled profile** for `web-app` Heavy Mode (this file) for Core+Profile.
-    - Prefer a **compiled project briefing** for Heavy Mode for Core+Profile+`.local`.
+- **Profiles + modes**
+  - `web-app` profile specializes Domains 03, 04, 06, 12 with stack-neutral but web-app-focused rules.
+  - Heavy Mode requires loading **full specs** for all Domains and Mode-Aware Addenda (02, 05, 07–13).
 
-- **Project `.local` overlays**
-  - `.local` files may:
-    - Tighten constraints (e.g., stricter testing, additional security rules, narrower stack choices).
-    - Document project-specific deviations from profile defaults.
-  - They **must not**:
-    - Weaken security (Domain 12 is extend-only) or non-overridable domains.
-    - Contradict ADAS precedence; if they do, you must flag and treat Core/Profile as authoritative.
+- **`.local` overlays**
+  - May:
+    - Tighten constraints (e.g., stricter testing, narrower stack choices, additional security rules).
+    - Document project-specific architecture, workflow, and naming conventions.
+  - Must not:
+    - Relax security (Domain 12) or contradict non-overridable domains.
+    - Break precedence; if they do, treat Core/Profile as authoritative and flag the conflict.
 
-- **Rules for reading ADAS context**
-  - In Heavy Mode, load:
-    - All Core Domains 01–15 (specs + Mode-Aware Addenda).
+- **Reading ADAS context (Heavy Mode)**
+  - Load:
+    - All Core Domains 01–15 + Mode-Aware Addenda.
     - All `web-app` profile overrides (03, 04, 06, 12).
-    - All relevant `.local` files (especially 03, 04, 06, 07, 10, 11, 12, 14, 15).
+    - All relevant `.local` files (especially 02–04, 05–07, 10–12, 14–15).
     - ADRs and Feature Ledger entries relevant to the task.
   - If required ADAS files are missing or malformed:
     - Warn the user, explain impact, and either:
-      - Proceed cautiously with Core + Profile rules, or
-      - Ask for correction before high-risk changes.
+      - Proceed cautiously using Core+Profile rules, or
+      - Request correction before high-risk changes.
 
 - **Behavioral contract**
-  - Operate deterministically; avoid improvisation that contradicts ADAS.
-  - Stay within the scope of the task but consider system-wide impact when needed.
+  - Operate deterministically; never improvise against ADAS.
+  - Consider system-wide impact when necessary, but stay within the user’s intent.
   - Be transparent about architecture, security, and ADAS-compliance decisions, especially when refusing or proposing ADRs.
-  - Default to server-side or backend execution for security-sensitive logic unless profile/project rules explicitly allow client-side behavior.
+  - Default to server-side/back-end execution for security-sensitive logic unless project rules explicitly allow client-side behavior.
 
 ---
 
@@ -195,7 +189,7 @@ Each subsection must present the **project-relevant, mode-aware version** of the
 
 - **Purpose & scope**
   - Single source of truth for product vision, personas, goals/non-goals, and canonical domain terms.
-  - Guides naming, feature relevance, and alignment checks for all code, docs, and reasoning.
+  - Guides naming, feature relevance, and alignment for all code, docs, and reasoning.
 
 - **Heavy Mode behavior**
   - Before major features or architectural changes:
@@ -212,27 +206,27 @@ Each subsection must present the **project-relevant, mode-aware version** of the
     - Must be backed by an ADR (Domain 11).
     - Should include term mappings (old → new) and impact notes.
     - Must remain consistent with Feature Ledger (Domain 09) and Status (Domain 08).
-  - Invariants from Domain 10 must not be contradicted by Domain 02 updates.
+  - Must not contradict invariants and danger zones recorded in Domain 10.
 
 ---
 
 ## 3.3 Domain 03 — Tech Stack & Dependencies (profile-adjusted)
 
 - **Permitted stack groups (web-app profile)**
-  - Projects must choose one or more stack groups from Domain 03 web-app:
-    - SPA-first (e.g., Vite + React, SvelteKit SPA, Vue 3 SPA).
-    - Fullstack React frameworks (e.g., Next.js App Router, Remix, RedwoodJS).
-    - Backend API stacks (Node/TS, Python/FastAPI, Go).
-    - Serverless/edge runtimes (Cloudflare Workers, Vercel Edge, AWS Lambda).
-    - BaaS (Supabase, Firebase, Appwrite/PocketBase).
-    - Cross-platform native (React Native, Flutter, desktop shells) paired with a web backend.
-    - Databases & persistence (Postgres, MySQL/PlanetScale, MongoDB, DynamoDB, SQLite/Turso, SurrealDB, Redis, etc.).
-  - Each project **must document** its concrete choice (e.g., “B1 Next.js App Router + E1 Supabase + G Postgres”) in:
+  - Projects must choose one or more stack groups from Domain 03 web-app, e.g.:
+    - **Group A**: SPA-first (Vite+React, SvelteKit SPA, Vue 3 SPA).
+    - **Group B**: Fullstack React frameworks (Next.js App Router, Remix, RedwoodJS).
+    - **Group C**: Backend API stacks (Node/TS, Python/FastAPI, Go).
+    - **Group D**: Serverless/edge runtimes (Cloudflare Workers, Vercel Edge, AWS Lambda).
+    - **Group E**: BaaS (Supabase, Firebase, Appwrite/PocketBase).
+    - **Group F**: Cross-platform native (React Native, Flutter, desktop shells) paired with a web backend.
+    - **Group G**: Databases & persistence (Postgres, MySQL/PlanetScale, MongoDB, DynamoDB, SQLite/Turso, SurrealDB, Redis, etc.).
+  - Each project **must document** its concrete choice (Stack Profile) in:
     - Project AI Helper Playbook and/or
     - Domain 03 `.local` overlay.
-  - You must follow the documented project choice; do not switch groups or tools without ADR-backed change.
+  - You must follow the documented Stack Profile; do not switch groups or tools without ADR-backed change.
 
-- **Global constraints (stack-neutral)**
+- **Global stack constraints (stack-neutral)**
   - **Strong typing at boundaries**:
     - External and domain boundaries must be strongly typed via static types (TypeScript, etc.) and/or schemas (Zod, Pydantic, etc.).
   - **Layered responsibilities**:
@@ -247,6 +241,13 @@ Each subsection must present the **project-relevant, mode-aware version** of the
   - **Documentation**:
     - Maintain a short “Stack Profile” and how to run app/tests.
 
+- **Allowed with justification**
+  - Introducing major frameworks or runtimes not in the stack groups.
+  - Using highly experimental stacks or persistence layers.
+  - Diverging from default testing tools.
+  - Running multiple frameworks in one app beyond clear migration scenarios.
+  - These require explicit justification in ADRs and `.local` / Playbooks; you may propose but not silently adopt them.
+
 - **Forbidden technologies / patterns**
   - Using technologies not part of:
     - A defined stack group **and**
@@ -254,7 +255,7 @@ Each subsection must present the **project-relevant, mode-aware version** of the
   - Committing secrets/tokens/keys.
   - Accessing DB/BaaS directly from browser/client in ways that bypass security or expose credentials.
   - Relying on unvalidated input at external boundaries.
-  - Introducing untyped/weakly typed escape hatches (`any`, unchecked JSON) at core domain boundaries without clear, documented reason.
+  - Introducing untyped/weakly typed escape hatches (`any`, unchecked JSON) at core domain boundaries without clear, ADR-backed reason.
 
 - **Mode-aware behavior (Heavy Mode)**
   - You may:
@@ -262,7 +263,7 @@ Each subsection must present the **project-relevant, mode-aware version** of the
     - Propose changes to build tooling, testing tools, or supporting libraries, within ADAS constraints.
     - Propose `.local` updates documenting deviations from profile defaults and the project’s Stack Profile.
   - You must:
-    - Ensure new dependencies are maintained, compatible with the chosen stack, and do not weaken security.
+    - Ensure new dependencies are maintained, compatible, and do not weaken security.
     - Evaluate security impact (Domain 12) and architecture impact (Domain 04) before changes.
     - Tie major stack changes to ADRs and update Domain 03 `.local` notes.
 
@@ -281,85 +282,91 @@ Each subsection must present the **project-relevant, mode-aware version** of the
 
 ## 3.4 Domain 04 — Architecture & Code Organization
 
-- **Required folder structure (web-app baseline)**
-  ```text
-  src/
-    app/
-      (routes)/
-      layout.tsx
-      globals.css
-    components/
-    lib/
-      validators/
-      server/
-    types/
-    hooks/
-    styles/
-  tests/
-  ```
-  - Projects may extend this (e.g., `src/lib/client`, `src/features/`) but must document deviations in `.local` and ADRs when structural.
+- **Stack-neutral architectural baseline**
+  - Recommended structure (adapted per project/framework):
+    ```text
+    src/
+      app/              # routing / top-level pages/screens
+      components/       # UI components
+      lib/              # utilities, helpers, adapters
+        validators/     # input / schema validation
+        server/         # server-only utilities (if applicable)
+      domain/           # business logic, services, use cases
+      data/             # repositories, ORM, API/BaaS clients
+      hooks/            # UI or domain-specific hooks
+      types/            # shared types/interfaces
+      styles/           # styling
+    tests/
+    ```
+  - If a framework imposes a structure (Next.js, Remix, SvelteKit), that becomes the project’s concrete realization of these layers.
 
-- **Architectural principles**
-  - **Server-first architecture** (for server-capable stacks like Next.js/Remix):
-    - Prefer server-side logic and server components/actions; client components only when necessary and explicitly marked with `"use client"`.
-  - **Separation of concerns**:
-    - No business logic in UI components; keep it in application/domain or server/lib layers.
-  - **Validation**:
-    - Centralize validation in `lib/validators` (or project equivalent) for all external inputs.
-  - **Boundaries**:
-    - No cross-layer imports that break layering (e.g., UI directly importing low-level DB internals if that violates conventions).
-    - No circular dependencies.
-  - **Configuration & secrets**:
-    - Isolate configuration and secrets from application logic; secrets only in server/backend code.
+- **Core architectural principles**
+  - **Layered architecture**:
+    - UI/presentation → domain/services → data/persistence.
+  - **Clean boundaries**:
+    - No DB or persistence logic in UI components.
+    - No business logic inside routing-only modules unless explicitly allowed and documented.
+    - No cross-layer imports that break architectural direction; no circular dependencies.
+  - **Validation & safety**:
+    - All external input validated via schemas/validators (e.g., under `lib/validators`).
+  - **Typed contracts**:
+    - Public interfaces, API boundaries, and domain boundaries must be typed.
 
-- **Component rules**
-  - Components must be small and pure; minimal side effects.
-  - Client components must explicitly declare `"use client"` where applicable.
-  - Avoid side effects in render paths; keep effects minimal and controlled.
+- **Client/server separation (when applicable)**
+  - For frameworks with both client and server execution:
+    - Server-only logic stays server-only; client bundles must not contain secrets or server logic.
+    - Project `.local` defines concrete enforcement patterns (e.g., server actions, API routes).
+
+- **Component rules (framework-agnostic)**
+  - Components must be small, pure, and presentation-focused.
+  - Manage only UI state; call domain logic via well-defined interfaces.
+  - Must not contain persistence or orchestration logic or unrelated side effects.
 
 - **Overrides & deviations**
   - Projects may:
-    - Add additional folders.
-    - Adjust naming conventions.
-    - Add platform-specific utilities.
-  - Projects may not:
-    - Break server/client boundaries in ways that weaken security.
-    - Move business logic into components as a default pattern.
-    - Introduce untyped global state that crosses layers without clear, ADR-backed justification.
+    - Add additional folders, adjust naming, expand domain boundaries, add platform-specific utilities.
+  - Projects may not (without ADR):
+    - Collapse architectural layers.
+    - Embed business logic in UI components as a default pattern.
+    - Mix client and server code incorrectly.
+    - Introduce global mutable state that crosses layers without strict justification.
 
 - **Mode differences (Heavy Mode)**
-  - You may propose and implement **large-scale refactors** and reorganizations, provided:
-    - They are consistent with ADAS principles.
+  - You may propose and implement **large-scale refactors** and reorganizations when:
+    - They align with ADAS principles and improve clarity/maintainability.
     - They are documented (ADR + `.local` updates if needed).
-    - Tests and invariants are preserved or strengthened.
-  - Use Domain 10 (invariants) to ensure refactors do not break critical assumptions.
+    - Tests and invariants (Domain 10) are preserved or strengthened.
 
 ---
 
 ## 3.5 Domain 06 — Testing & Quality
 
-- **Required testing stack (web-app profile)**
-  - Unit tests: **Vitest**.
-  - Component tests: **React Testing Library** (for React-based stacks).
-  - E2E tests: **Playwright**.
-  - Mocking: Vitest’s built-in mocks or existing helpers.
-  - Projects may specialize in `.local`, but must remain modern, deterministic, and CI-friendly.
+- **Required testing capabilities (stack-neutral)**
+  - **Unit tests**:
+    - Isolate business logic; deterministic; type-safe where applicable.
+  - **Component tests** (for UI frameworks):
+    - Test components without real infrastructure; use framework-appropriate tools.
+  - **Integration tests**:
+    - Validate data access, service orchestration, and API boundaries.
+  - **End-to-end tests**:
+    - Cover core user flows, auth (if relevant), and critical CRUD paths.
+  - **Mocking & isolation**:
+    - External services must be mockable; tests must be deterministic; mocks should reflect real semantics.
 
-- **Required test structure**
+- **Recommended test layout**
   ```text
   tests/
     unit/
     integration/
     e2e/
   ```
-  - Test files: `*.test.ts` (or project-standard equivalent, documented in `.local`).
+  - Test files typically named `<name>.test.<ext>` (e.g., `.ts`, `.tsx`, `.js`, `.py`, `.go`), refined by project `.local`.
 
 - **Core testing requirements**
   - All critical logic must be tested.
   - Validation, error handling, and async code must have tests.
   - Automated tests must run in CI; linting and type-checking are required.
-  - Tests must be deterministic, type-safe, and maintainable.
-  - Mocks must reflect realistic behavior; avoid over-mocking.
+  - Tests must be deterministic, maintainable, and not rely on flaky external services.
 
 - **Mode expectations (Heavy Mode)**
   - Enforce full testing requirements for new features and refactors.
@@ -367,28 +374,27 @@ Each subsection must present the **project-relevant, mode-aware version** of the
   - Suggest and add missing tests where coverage is insufficient.
   - You may restructure tests (e.g., moving tests to correct folders, consolidating helpers) when it improves clarity and maintainability.
   - You may add `.local` testing rules (e.g., stricter coverage thresholds) and propose ADRs for major testing strategy changes.
-  - Avoid introducing flaky, environment-dependent tests without clear justification and mitigation.
 
 ---
 
 ## 3.6 Domain 07 — Workflow, Git, Code Review
 
 - **Structure of changes**
-  - Changes should be **small and focused** where possible, but Heavy Mode allows larger PRs when necessary for coherent architectural or security work.
+  - Prefer small, focused changes, but Heavy Mode allows larger PRs when necessary for coherent architectural or security work.
   - Group related changes logically; avoid mixing unrelated refactors and features.
 
-- **PR size expectations**
-  - Prefer multiple smaller PRs over one massive PR, unless a single atomic change is safer (e.g., security-critical refactor).
+- **PR size & content**
   - Each PR should have a clear purpose and scope.
+  - PR descriptions should summarize changes, link to ADRs/tickets, and note tests and impacts.
 
 - **Review behavior**
-  - Certain changes (security, architecture, major behavior changes) always require human review.
+  - Security, architecture, and major behavior changes always require human review.
   - CI must pass before merging, unless explicitly overridden and documented.
 
 - **Commit strategy**
   - Follow project’s branch naming conventions (e.g., `feature/...`, `bugfix/...`).
   - Use clear commit messages, optionally with tags (e.g., `[feat]`, `[fix]`).
-  - For projects at version ≥ 1.0, work must occur on branches, not direct commits to main.
+  - For projects at version ≥ 1.0, assume work occurs on branches, not direct commits to main.
 
 - **Mode differences (Heavy Mode)**
   - You may propose workflow improvements when:
@@ -444,7 +450,7 @@ Each subsection must present the **project-relevant, mode-aware version** of the
 
 - **Web-app profile security posture**
   - **Auth & identity**
-    - Use secure, project-chosen auth (e.g., Supabase Auth, Firebase Auth, Cognito) documented in `.local` / playbooks.
+    - Typically uses secure providers (e.g., Supabase Auth, Firebase Auth, Cognito) documented in `.local` / playbooks.
     - Sessions validated server-side; client state is not trusted for auth decisions.
   - **Authorization & data access**
     - Role and permission checks at server/backend boundaries.
@@ -506,7 +512,7 @@ Each subsection must present the **project-relevant, mode-aware version** of the
   - Profile overrides: `Domain <##> - <title> (web-app).md`.
   - Project `.local` overrides: `<##>_<short-name>.local.md`.
   - Use **kebab-case** or project-standard naming for code files and folders.
-  - Tests under `tests/{unit,integration,e2e}` with `*.test.ts` suffix.
+  - Tests under `tests/{unit,integration,e2e}` with `*.test.<ext>` suffix.
 
 - **Docs vs ADAS ownership**
   - ADAS/ADRs are authoritative for rules, constraints, workflows, security posture, and architecture decisions.
@@ -516,7 +522,7 @@ Each subsection must present the **project-relevant, mode-aware version** of the
 - **Placement of features, modules, tests**
   - Features and routes under `src/app` and/or `src/features` as per project conventions.
   - Shared components under `src/components`.
-  - Business logic and server-side operations under `src/lib/server`.
+  - Business logic and server-side operations under `src/domain` or `src/lib/server`.
   - Validation under `src/lib/validators`.
   - Types under `src/types`.
   - Hooks under `src/hooks`.
@@ -524,8 +530,8 @@ Each subsection must present the **project-relevant, mode-aware version** of the
   - Tests under `tests/unit`, `tests/integration`, `tests/e2e`.
 
 - **Rules AI must always respect (Heavy Mode)**
-  - Enforce the complete directory tree and naming rules.
-  - Validate that any new Domain, Profile, or `.local` file is correctly named and placed.
+  - Enforce the directory tree and naming rules for ADAS files.
+  - Ensure any new Domain, Profile, or `.local` file is correctly named and placed.
   - Correct inconsistent structures when safe, and propose ADRs/updates if structural changes are systemic.
 
 ---
@@ -545,7 +551,7 @@ Each subsection must present the **project-relevant, mode-aware version** of the
     - Starter templates and relevant Domains/docs.
 
 - **Precedence model**
-  - Reinforces that ADAS is multi-layered:
+  - ADAS is multi-layered:
     - Core → Profile → Project `.local` → User request.
   - Non-overridable domains (`01`, `07`, `11`, `14`, `15`) cannot be weakened or contradicted by profiles or `.local`.
 
@@ -595,7 +601,7 @@ Each subsection must present the **project-relevant, mode-aware version** of the
 - **Tech stack constraints**
   - Strong typing at boundaries is mandatory (TypeScript, schemas, etc.).
   - No new untyped JavaScript or untyped “escape hatches” at core boundaries without explicit, ADR-backed reason.
-  - Testing stack and commands defined by project; for typical web-app starters: Vitest + Testing Library + Playwright; no replacement of these tools without ADRs and Domain 06 updates.
+  - Testing stack and commands defined by project; you must not replace them without ADRs and Domain 06 updates.
 
 - **Governance invariants**
   - ADAS precedence: Core → Profile → `.local` → User request.
@@ -606,7 +612,7 @@ Each subsection must present the **project-relevant, mode-aware version** of the
 
 - **Naming/structure invariants**
   - ADAS files follow Domain 14 naming and placement rules.
-  - Tests live under `tests/{unit,integration,e2e}` (or documented project variant) with `*.test.ts` naming.
+  - Tests live under `tests/{unit,integration,e2e}` (or documented project variant) with `*.test.<ext>` naming.
   - New code and tests must align with existing project naming and layout conventions.
 
 These invariants are **non-negotiable** and must never be violated.
@@ -615,24 +621,16 @@ These invariants are **non-negotiable** and must never be violated.
 
 # 5. Profile Overlays — Effective Merged Rules
 
-Provide the final result of merging:
-
-- Core Domains  
-- Profile Domains  
-- ADAS Docs  
-- Invariants  
-
-This is the shortcut for AI helpers:  
-**“Here is the final truth.”**
+This section summarizes the final merged behavior from Core Domains, `web-app` profile overrides, `.local` overlays, docs, and invariants:
 
 - You are operating in an ADAS-governed **web application** under Core 1.1.0 and the `web-app` profile.
-- The project has chosen a concrete stack from the permitted web-app stack groups and documented it in `.local` / playbooks; you must follow that choice and may not change it without ADR-backed governance.
+- The project has chosen a concrete stack from the **permitted web-app stack groups** and documented it in a Stack Profile (`.local` / playbooks); you must follow that choice and may not change it without ADR-backed governance.
 - You must load and respect **all Domains 01–15**, plus `web-app` overrides for Domains 03, 04, 06, 12, and all relevant `.local` files.
 - **Security is paramount**: no secrets in code, no insecure token storage, no bypassing RLS or equivalent backend protections, no unsafe HTML or `eval`. Domain 12 is extend-only; security may only be tightened.
-- **Architecture is layered and server-first**: UI/presentation, application/domain logic, and data access/persistence are clearly separated; business logic and data access live in non-UI layers; validation is centralized; UI components remain thin and pure.
-- **Tech stack is constrained but flexible**: you must stay within the project’s chosen stack groups and Stack Profile; new dependencies are allowed only when they fit those choices and respect security and invariants.
-- **Testing is mandatory**: use the project’s testing stack (typically Vitest + Testing Library + Playwright) with the prescribed `tests/{unit,integration,e2e}` layout; new features and refactors must include appropriate tests.
-- **Workflow and decisions are governed**: follow Domain 07 for Git/PR/CI; record significant decisions as ADRs under `docs/ADRS/`; keep ADRs, Feature Ledger, and Status in sync.
+- **Architecture is layered and stack-neutral**: UI/presentation, application/domain logic, and data access/persistence are clearly separated; business logic and data access live in non-UI layers; validation is centralized; UI components remain thin and pure.
+- **Tech stack is constrained but flexible**: you must stay within the project’s chosen stack groups and Stack Profile; new dependencies are allowed only when they fit those choices and respect security and invariants, and are documented via ADRs and `.local` updates.
+- **Testing is mandatory**: use the project’s testing stack with the prescribed `tests/{unit,integration,e2e}` layout; new features and refactors must include appropriate tests (unit, integration, E2E as appropriate).
+- **Workflow and decisions are governed**: follow Domain 07 for Git/PR/CI; record significant decisions as ADRs under `docs/ADRS/`; keep ADRs, Feature Ledger (Domain 09), and Status (Domain 08) in sync.
 - **ADAS structure is fixed**: Domains live under `domains/core` and `domains/profiles/web-app`; `.local` overrides live in `.ai/`; `/docs/` is informational only; `adas-config.json` defines non-overridable domains and profile overrides.
 - In **Heavy Mode**, you may re-architect, change stack details within permitted groups, strengthen security, and evolve governance, but **never** in ways that weaken security or violate non-overridable domains or invariants; all such changes must be ADR-backed and tested.
 
@@ -640,15 +638,14 @@ This is the shortcut for AI helpers:
 
 # 6. Mode-Specific Examples (LLM Training Aids)
 
-- **Good ADAS-respecting Heavy Mode changes**
-
+- **Good Heavy Mode changes (ADAS-respecting)**  
   1. **Introduce a new feature with full governance**
-     - Implement a new feature using the project’s chosen stack (e.g., Next.js App Router + Supabase) with routes, server logic, validators, and DB schema updates.
+     - Implement a new feature using the project’s chosen stack (e.g., Next.js + Supabase) with routes, domain services, validators, and DB schema updates.
      - Add unit, integration, and E2E tests in the correct `tests/` subfolders.
      - Draft an ADR describing the feature’s architectural approach and link it in the PR and Feature Ledger entry.
 
   2. **Refactor to enforce layered architecture**
-     - Move business logic out of UI components into application/domain or `lib/server` modules.
+     - Move business logic out of UI components into `src/domain` or `src/lib/server` modules.
      - Update imports and tests accordingly, ensuring invariants and behavior remain intact.
      - Update Domain 04 `.local` to document the refined pattern, with an ADR explaining the refactor.
 
@@ -663,8 +660,7 @@ This is the shortcut for AI helpers:
      - Add tests for critical paths.
      - Draft an ADR explaining the dependency choice and update Domain 03 `.local` to record it.
 
-- **Bad ADAS-violating Heavy Mode changes**
-
+- **Bad Heavy Mode changes (ADAS-violating)**  
   1. **Weakening security for convenience**
      - Disabling RLS or equivalent backend protections to simplify queries, or adding raw DB access that bypasses security → violates Domain 12 invariants.
 
@@ -684,7 +680,7 @@ This is the shortcut for AI helpers:
 
 # 7. How to Detect Conflicts
 
-- **How to detect ADAS violations**
+- **Detecting ADAS violations**
   - Compare requested or planned changes against:
     - Security invariants (Domain 12 + web-app profile + `.local`).
     - Architectural rules (Domain 04 + web-app + `.local`).
@@ -698,7 +694,7 @@ This is the shortcut for AI helpers:
     - Ignore or contradict existing ADRs or `.local` rules.
     - Place ADAS files outside prescribed directories or with incorrect names.
 
-- **How to surface conflicts to the user**
+- **Surfacing conflicts to the user**
   - Explicitly name the violated rule and its source, e.g.:
     - “This would bypass RLS, which Domain 12 and the web-app profile forbid.”
     - “This contradicts ADR-005, which mandates server-side role checks.”
@@ -706,7 +702,7 @@ This is the shortcut for AI helpers:
   - Offer ADAS-compliant alternatives (e.g., server-side checks, secure patterns, incremental refactors).
   - If the user insists on a conflicting direction, state that it requires **changing ADAS via ADRs** and may not be acceptable under current governance.
 
-- **What to do when rules are ambiguous**
+- **Handling ambiguity**
   - If ambiguity is minor and local:
     - Choose the safest, least invasive option that matches existing patterns and does not weaken security.
   - If ambiguity affects security, architecture, or stack:

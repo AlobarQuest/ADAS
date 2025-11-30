@@ -1,54 +1,87 @@
-# Domain 06 — Testing & Quality  
-**Web-App Profile — Mode-Aware Specification**
+# Domain 06 — Testing & Quality (Web‑App Profile, Stack‑Neutral)
 
 ## 1. Purpose
-Defines testing standards for all ADAS web‑app projects.  
-Fully aligned with ADAS Modes.
+Defines **global testing requirements** for ADAS‑governed web applications.  
+This domain is **stack-neutral** and does NOT mandate specific tools (e.g., Vitest, Playwright).  
+Concrete test toolchains are defined by Patterns and `.local` overlays.
 
 ---
 
-# 2. Mode Awareness
+## 2. Mode Awareness
 
-## 2.1 Light Mode
-Used when adding tests for existing behavior or doing small refactors.
-
-AI helpers must:
-
-- Follow existing patterns  
-- Not restructure test folders  
-- Not introduce new frameworks  
-- Validate only the tests relevant to the change  
-- Avoid proposing full-suite restructuring  
-
-Light Mode = “add or update tests locally.”
-
-## 2.2 Heavy Mode
-Used when building new features, modules, or making architectural changes.
+### 2.1 Light Mode
+Used for:
+- Adding tests for existing behavior  
+- Small refactors  
+- Minor bug fixes  
 
 AI helpers must:
+- Follow existing test patterns  
+- Avoid restructuring test directories  
+- Avoid introducing new frameworks  
+- Add tests only for touched or related behavior  
+- Keep test changes minimal  
 
-- Enforce full testing requirements  
-- Ensure new code paths have appropriate tests  
+Light Mode = “test what changed.”
+
+---
+
+### 2.2 Heavy Mode
+Used when:
+- Adding new features or modules  
+- Changing architecture boundaries  
+- Introducing new services or data flows  
+- Enforcing full test coverage expectations  
+
+AI helpers must:
+- Load full Domain 06 specification  
+- Ensure new code paths are fully tested  
 - Suggest missing tests  
-- Enforce test directory structure  
-- Update future‑facing `.local` test notes if needed  
+- Enforce project-level test structure  
+- Update `.local` testing rules if needed  
+- Require ADR for major testing strategy changes  
 
-Heavy Mode = “govern the entire suite.”
-
----
-
-# 3. Required Testing Stack
-
-| Layer | Tool |
-|-------|------|
-| Unit | Vitest |
-| Component | React Testing Library |
-| E2E | Playwright |
-| Mocking | Built‑in Vitest mocks |
+Heavy Mode = “test governance.”
 
 ---
 
-# 4. Required Test Structure
+## 3. Required Testing Capabilities (Stack-Neutral)
+
+All projects MUST support:
+
+### 3.1 Unit Testing
+- Tests MUST isolate business logic  
+- Domain logic MUST be tested independently of UI  
+- Pure functions MUST have deterministic tests  
+
+### 3.2 Component Testing (When Applicable)
+- UI frameworks (React/Vue/Svelte/etc.) MUST have a way to test components  
+- Components MUST NOT depend on real infrastructure  
+- Render logic MUST be testable  
+
+### 3.3 Integration Testing
+Projects MUST support integration tests that can validate:
+- Data access  
+- Service orchestration  
+- API boundaries  
+- Realistic execution flows  
+
+### 3.4 End-to-End Testing
+Projects MUST support at least minimal e2e capabilities for:
+- Core user flows  
+- Authentication (if relevant)  
+- Critical CRUD paths  
+
+### 3.5 Mocking & Test Isolation
+- All external services MUST be mockable  
+- Tests MUST remain deterministic  
+- Mocks MUST reflect real production semantics  
+
+---
+
+## 4. Recommended Test Structure (Stack-Neutral)
+
+A recommended, framework-agnostic baseline:
 
 ```
 tests/
@@ -57,39 +90,47 @@ tests/
   e2e/
 ```
 
-All test files must follow:
+Projects MAY adjust this structure in their Project Playbook or `.local`.
+
+Test file naming (recommended):
 
 ```
-<name>.test.ts
+<name>.test.<ext>
 ```
+
+(.ts, .tsx, .js, .py, etc. depending on stack)
 
 ---
 
-# 5. Requirements
+## 5. Requirements (Global)
 
-- Type‑safe tests  
-- Fast, deterministic tests  
-- Mocks must match production behavior  
-- E2E tests must use realistic flows  
+All projects MUST ensure:
+
+- Tests are type-safe when applicable  
+- Tests are deterministic and fast  
+- CI runs all test layers appropriate for the project  
+- Mock behavior matches real external behavior  
+- No reliance on flakey or volatile external services  
 
 ---
 
-# 6. Overrides
+## 6. Overrides
 
-Projects may:
-
-- Add test helpers  
-- Add utilities  
+### Project MAY:
+- Add helpers and utilities  
+- Use alternative test runners or tooling  
+- Modify directory layout  
 - Define conventions in `.local`  
 
-But may not:
-
-- Replace testing frameworks  
-- Introduce browser‑only mocks  
-- Test through unstable interfaces  
+### Project MAY NOT:
+- Replace the entire testing strategy without ADR  
+- Introduce browser-only mocks that break CI  
+- Skip tests for critical flows  
+- Test through unstable or experimental interfaces without justification  
 
 ---
 
-# 7. Summary
-
-Domain 06 ensures all web apps built under ADAS are **well‑tested, stable, and predictable.**
+## 7. Summary
+Domain 06 ensures all ADAS web applications are **testable, predictable, and verifiable**.  
+Stack and tool choices come from Patterns and Projects;  
+this domain defines the **required capabilities and global expectations** for testing and quality.

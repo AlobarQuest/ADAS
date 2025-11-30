@@ -30,20 +30,21 @@ In this project, ADAS is the **authoritative rulebook**.
 
 This project uses the **web-app ADAS profile**.
 
-- **Project-local rules:**  
+- **Global ADAS (Core + Profile) preferred load path:**  
+  - Use the **compiled profile** when present (Core + web-app profile merged):  
+    `../ADAS/domains/profiles/web-app/Compiled Profile - light.md`  
+    `../ADAS/domains/profiles/web-app/Compiled Profile - heavy.md`  
+  - If the compiled profile is missing, load **Core** (`../ADAS/domains/core/*`) then the **web-app profile overrides** (`../ADAS/domains/profiles/web-app/*`).
+- **Project-local rules (overlays):**  
   `.ai/` folder in this repository  
-  - `.ai/00_ai-entry-point-meta-rules.md`
+  - `.ai/00_ai-entry-point-meta-rules.md`  
   - `.ai/*.local.md`
-- **Global ADAS repo:**  
-  `../ADAS/` (sibling repo by default)
+- **Per-project compiled briefings (preferred):**  
+  `.ai/adas-briefing.light.md`  
+  `.ai/adas-briefing.heavy.md`  
+  These embed the compiled profile plus the local overlays for the given mode. If missing, read the `.local` files directly.
 - **Global configuration:**  
   `../ADAS/adas-config.json`
-- **Compiled Profile (global, web-app):**  
-  `../ADAS/domains/profiles/web-app/Compiled Profile - light.md`  
-  `../ADAS/domains/profiles/web-app/Compiled Profile - heavy.md`
-- **Per-project compiled briefings (if present):**  
-  `.ai/adas-briefing.light.md`  
-  `.ai/adas-briefing.heavy.md`
 
 ---
 
@@ -87,12 +88,17 @@ Check for `.ai/adas-briefing.<MODE>.md`:
 - If it **exists**:
   - Read it fully.
   - Treat it as the **primary ADAS summary** for this project and mode.
+  - It already includes the compiled profile (Core + web-app) **plus** the project `.local` overlays for that mode.
 
 - If it **does not exist**:
-  - Fall back to the global **Compiled Profile** and local overlays:
-    - Read `../ADAS/domains/profiles/web-app/Compiled Profile - <MODE>.md`
-    - Read `.ai/00_ai-entry-point-meta-rules.md`
-    - Read `.ai/*.local.md`
+  - Fall back to the global **compiled profile** (Core + web-app) for the mode if present:
+    - `../ADAS/domains/profiles/web-app/Compiled Profile - <MODE>.md`
+  - If the compiled profile is missing, load Core then profile overrides:
+    - `../ADAS/domains/core/*` (all Domains + Mode-Aware addenda)
+    - `../ADAS/domains/profiles/web-app/*` (overrides for 03/04/06/12)
+  - Then load project overlays:
+    - `.ai/00_ai-entry-point-meta-rules.md`
+    - `.ai/*.local.md`
   - Optionally, ask Devon if they want you to regenerate the per-project briefing.
 
 ### Step 3 — Always load project overlays

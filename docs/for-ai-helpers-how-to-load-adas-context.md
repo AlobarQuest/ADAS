@@ -53,7 +53,21 @@ This file tells the helper **where** to load ADAS content from.
 
 ---
 
-# 4. Loading Rules — Light Mode
+# 4. Prefer Compiled Artifacts (Cheaper) with Fallbacks
+
+- **Global/Profile layer (Core + Profile)**  
+  - Preferred: load the **compiled profile** for the active profile/mode (Core + Profile merged).  
+  - Fallback: load Core specs (01–15 + Mode-Aware addenda) then Profile overrides.
+
+- **Project layer (Local)**  
+  - Preferred: load the **compiled project briefing** for the mode (compiled profile + project `.local` overlays).  
+  - Fallback: load `.ai/00_ai-entry-point-meta-rules.md` and `.ai/*.local.md` directly.
+
+Precedence remains: **Core → Profile → Local → User**. Compiled artifacts must honor this order.
+
+---
+
+# 5. Loading Rules — Light Mode
 
 In Light Mode, AI helpers must load **only the minimal subset** necessary:
 
@@ -61,13 +75,13 @@ In Light Mode, AI helpers must load **only the minimal subset** necessary:
 2. Domain 01 — only summary  
 3. Domain 14 — naming/path summary  
 4. Primary Domain(s) relevant to the task:  
-   - Core + Profile + Local version of that Domain  
+   - Core + Profile + Local version of that Domain (via compiled profile/briefing if available)  
 5. Relevant code files  
 
 Do **not** load:
 
 - All 15 Domains  
-- Full profile specs  
+- Full profile specs (unless compiled profile missing)  
 - ADR history  
 - Full feature ledger  
 
@@ -75,14 +89,14 @@ Light Mode → speed, small scope, minimal governance.
 
 ---
 
-# 5. Loading Rules — Heavy Mode
+# 6. Loading Rules — Heavy Mode
 
 In Heavy Mode, AI helpers must load:
 
 1. `.ai/00_ai-entry-point-meta-rules.md`  
-2. **All Core Domains 01–15**  
-3. **All Profile overrides** for active profile  
-4. All relevant `.local` files:
+2. **All Core Domains 01–15** (or compiled profile if present)  
+3. **All Profile overrides** for active profile (or compiled profile)  
+4. All relevant `.local` files (or compiled briefing):  
    - Always: 03, 04, 06, 07, 10, 11, 12, 14, 15  
 5. ADRs relevant to the task  
 6. Feature ledger entries  

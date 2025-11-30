@@ -1,8 +1,8 @@
 {
   "adas_core": {
     "name": "AI Development Assistant System (ADAS)",
-    "version": "1.0.0",
-    "non_overridable_domains": ["01", "07", "11", "12", "14", "15"],
+    "version": "1.1.0",
+    "non_overridable_domains": ["01", "07", "11", "14", "15"],
     "domains_root": "domains/core",
     "description": "Core governance and behavior rules for all AI helpers in all projects."
   },
@@ -16,7 +16,7 @@
       "overrides_domains": ["03", "04", "06", "12"],
       "starter": {
         "name": "ADAS Web App Starter",
-        "path": "starters/web-app"
+        "path": "starters/web-app/.ai"
       }
     },
 
@@ -28,7 +28,7 @@
       "overrides_domains": ["03", "04", "06", "12"],
       "starter": {
         "name": "ADAS Desktop App Starter",
-        "path": "starters/desktop-app"
+        "path": "starters/desktop-app/.ai"
       }
     },
 
@@ -40,7 +40,7 @@
       "overrides_domains": ["03", "04", "06", "12"],
       "starter": {
         "name": "ADAS iOS App Starter",
-        "path": "starters/mobile-ios"
+        "path": "starters/mobile-ios/.ai"
       }
     }
   },

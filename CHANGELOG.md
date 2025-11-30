@@ -23,3 +23,17 @@ Semantic-style versioning: **MAJOR.MINOR**
 This version establishes the baseline architecture for the two-level ADAS system:
 - Global ADAS  
 - Project-level overlays  
+
+---
+
+## v1.1 – Clarifications & Starter Path Updates
+**Date:** 11/30/2025
+
+### Changed
+- Clarified Domain 12 as extend-only (Profiles/locals may tighten security but not weaken it); aligned non-overridable list accordingly.
+- Added compiled-first loading guidance to Domain 01 and helper docs; clarified precedence with compiled profiles/briefings.
+- Updated starter paths to point to `starters/<profile>/.ai`.
+- Regenerated compiled profile metadata (web-app) and refreshed canonical wiki index.
+
+### Notes
+Version bump reflects governance/doc updates that affect how ADAS is loaded and interpreted; no breaking architectural changes.

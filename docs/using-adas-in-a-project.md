@@ -22,8 +22,8 @@ ADAS gives you:
 
 To use ADAS in a project, you need:
 
-- The **Global ADAS repository** set up (with `domains/`, `adrs/`, `docs/`, and `project-starter/`).  
-- Access to the `project-starter/.ai` folder in that repo.  
+- The **Global ADAS repository** set up (with `domains/`, `adrs/`, `docs/`, and `starters/<profile>/.ai`).  
+- Access to the `starters/<profile>/.ai` folder in that repo (e.g., `starters/web-app/.ai`).  
 - A code project repo where you want to enable ADAS.
 
 ---
@@ -38,8 +38,8 @@ In your project repo:
    # From your project root
    mkdir -p .ai
 
-   # Example if ADAS is cloned next to this project
-   cp -r ../ADAS/project-starter/.ai/* .ai/
+   # Example if ADAS is cloned next to this project (web-app profile)
+   cp -r ../ADAS/starters/web-app/.ai/* .ai/
    ```
 
 2. After copying, your project should contain:

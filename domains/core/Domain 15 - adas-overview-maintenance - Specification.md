@@ -64,6 +64,8 @@ ADAS uses semantic versioning:
 - **MAJOR** — breaking changes  
 - **MINOR** — additive, non-breaking  
 
+Current Core version: **1.1.0**
+
 Every version bump requires updating:
 - Domain 15  
 - `CHANGELOG.md`  

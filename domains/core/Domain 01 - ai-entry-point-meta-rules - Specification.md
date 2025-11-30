@@ -77,17 +77,28 @@ AI helpers must classify the task as **Light** or **Heavy** using:
 
 When a Core Domain has a Mode-Aware Addendum, AI helpers must treat that addendum as part of the Domain and load it whenever the Domain is loaded.
 
+Use compiled artifacts when available to reduce cost, while preserving precedence:
+
+- **Global/Profile layer (Core + Profile)**
+  - Preferred: load the **compiled profile** for the active profile/mode (Core + Profile merged).
+  - Fallback if compiled profile is missing: load Core specs (01–15 + Mode-Aware addenda) then Profile overrides.
+
+- **Project layer (Local)**
+  - Preferred: load the **compiled project briefing** for the mode (compiled profile + project `.local` overlays).
+  - Fallback if briefing is missing: load `.ai/00_ai-entry-point-meta-rules.md` and all `.ai/*.local.md` directly.
+
 #### Light Mode loads:
 - Domain 01 summary (this file)
 - Domain 14 summary  
 - Relevant Domain (03/04/06/12)
-- Core Specification + Mode-Aware Addendum (if present) + Profile + Project \.local'  
+- **Global/Profile via compiled profile** (preferred) or Core + Profile fallback, with Mode-Aware Addenda
+- **Local via compiled briefing** (preferred) or `.ai/*.local.md` fallback
 - Only the affected code files
 
 #### Heavy Mode loads:
-- All Core Domains (their Specifications **plus any Mode-Aware Addenda**)s  
-- All Profile overrides for active profile  
-- Relevant `.local` files  
+- All Core Domains (Specifications **plus any Mode-Aware Addenda**)  
+- All Profile overrides for active profile (or compiled profile if present)  
+- Relevant `.local` files (or compiled briefing if present)  
 - ADRs + feature ledger entries  
 - All relevant code files
 
@@ -112,6 +123,8 @@ If a `.local` file or user request contradicts a non‑overridable Domain:
 - AI helper must flag it  
 - Provide compliant alternatives  
 - Suggest creating an ADR  
+
+**Domain 12 (Security) is extend-only:** Profiles and `.local` overlays may add stricter rules but may not weaken security.
 
 ---
 

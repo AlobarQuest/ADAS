@@ -4,12 +4,12 @@ Compiled Profile Metadata (filled by compiler script)
 COMPILED_PROFILE:
   PROFILE: web-app
   MODE: light
-  ADAS_CORE_VERSION: 1.0.0
-  GENERATED_AT: 2025-11-29T00:00:00Z
+  ADAS_CORE_VERSION: 1.1.0
+  GENERATED_AT: 2025-11-30T17:16:55Z
   SOURCE_HASH:
-    CORE_DOMAINS: "f2471c308a34ac3429f1e15bf648f27e699ccc5bedcd65973afe151f952642d4"
-    PROFILE_DOMAINS: "fbae08e273e62509e940c12a6b229989ce59987c28f0dff0b7b33d889fa9733d"
-    DOCS: "475636e9a0e8f2794d75f8f2e97be1587b7aa9d350f95896e4a43bbfec6ca4bd"
+    CORE_DOMAINS: "f5f6de910d3c7b7dfd71f25a2018046b23ee971bc9aa2a237c460913a7f497fe"
+    PROFILE_DOMAINS: "d4dde8a3fb51a69c247b38123477c308a6656e25226a6e53c187f9195cb4aae9"
+    DOCS: "38a9d0d53e323839464b38694c205573be5ee868f8d40867960cee428920d6f1"
 -->
 
 # ADAS — Compiled Profile  
@@ -130,11 +130,11 @@ This section merges **Core Domains**, **web-app Profile overrides**, and **Docs*
   - Apply rules in this strict order:
     1. **Core Domains** (global; some non-overridable).
     2. **Profile Domains** (`web-app` overrides for 03, 04, 06, 12).
-    3. **Project `.local` overrides** (may specialize but **never** weaken security or non-overridable domains).
+    3. **Project `.local` overrides** (may specialize but **never** weaken security or non-overridable domains; security rules may only be tightened).
     4. **User request** (only if consistent with 1–3).
 
 - **Non-overridable Domains**
-  - From `adas-config.json`: **01, 07, 11, 14, 15** are non-overridable.
+  - From `adas-config.json`: **01, 07, 11, 14, 15** are non-overridable. Domain 12 (Security) is **extendable only**: profiles/locals may add stricter rules but may not relax security.
   - If `.local` or user instructions conflict with these or with security rules, you must:
     - Flag the conflict.
     - Refuse the violating part.
@@ -367,6 +367,7 @@ This section merges **Core Domains**, **web-app Profile overrides**, and **Docs*
     - Prefer server-side checks and validation consistent with existing patterns.
   - If a user asks for a change that would weaken security (e.g., “log the JWT”, “disable RLS for debugging”):
     - Refuse and explain the security rules; offer a safe alternative if possible.
+  - Profile and project overlays may only **tighten** these security rules, never relax them.
 
 ---
 
@@ -482,7 +483,7 @@ This is the **final merged truth** for `web-app` in **Light Mode**:
   - Do not change auth, roles, RLS, or secret flows in Light Mode; only ensure your changes remain secure.
 
 - **Governance & workflow**
-  - Respect ADAS precedence and non-overridable domains.
+  - Respect ADAS precedence and non-overridable domains; treat Domain 12 as extend-only (stricter security allowed, never weaker).
   - Treat ADRs, workflow rules, and ADAS files as **read-only**.
   - Follow existing Git/PR conventions when suggesting commit/PR text.
 
@@ -549,7 +550,7 @@ This is the **final merged truth** for `web-app` in **Light Mode**:
     - Choose the safest, least invasive option that matches existing patterns.
   - If ambiguity involves security, architecture, or stack:
     - Ask the user for clarification or recommend handling it in Heavy Mode.
-  - Never assume permission to weaken security or violate non-overridable domains due to ambiguity.
+  - Never assume permission to weaken security (Domain 12 is extend-only) or violate non-overridable domains due to ambiguity.
 
 ---
 

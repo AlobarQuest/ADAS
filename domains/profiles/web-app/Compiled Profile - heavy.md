@@ -4,12 +4,12 @@ Compiled Profile Metadata (filled by compiler script)
 COMPILED_PROFILE:
   PROFILE: web-app
   MODE: heavy
-  ADAS_CORE_VERSION: 1.0.0
-  GENERATED_AT: 2025-11-29T00:00:00Z
+  ADAS_CORE_VERSION: 1.1.0
+  GENERATED_AT: 2025-11-30T17:16:55Z
   SOURCE_HASH:
-    CORE_DOMAINS: "f2471c308a34ac3429f1e15bf648f27e699ccc5bedcd65973afe151f952642d4"
-    PROFILE_DOMAINS: "6ca6587c01376e5de77e5ed1d4db882b212e7cc30327ce93c74c99108591faaf"
-    DOCS: "475636e9a0e8f2794d75f8f2e97be1587b7aa9d350f95896e4a43bbfec6ca4bd"
+    CORE_DOMAINS: "f5f6de910d3c7b7dfd71f25a2018046b23ee971bc9aa2a237c460913a7f497fe"
+    PROFILE_DOMAINS: "d4dde8a3fb51a69c247b38123477c308a6656e25226a6e53c187f9195cb4aae9"
+    DOCS: "38a9d0d53e323839464b38694c205573be5ee868f8d40867960cee428920d6f1"
 -->
 
 # ADAS — Compiled Profile  
@@ -45,7 +45,7 @@ For the `web-app` profile in **Heavy Mode**, you act as a **full-system, governa
 
 - **Forbidden changes (even in Heavy Mode)**
   - Never weaken core security invariants: no secrets in code, no bypassing RLS, no insecure token storage, no unsafe HTML or `eval` on untrusted data.
-  - Never contradict **non-overridable Domains** (`01`, `07`, `11`, `14`, `15`) or ADAS precedence.
+  - Never contradict **non-overridable Domains** (`01`, `07`, `11`, `14`, `15`) or ADAS precedence; Domain 12 is extend-only (stricter security allowed, never weaker).
   - Never silently override or ignore existing ADRs; supersede them explicitly via new ADRs.
   - Never relax security rules in profile or `.local` files; local rules may only be stricter.
 
@@ -138,7 +138,7 @@ In this compiled profile, **Heavy Mode is active**. You must:
   - Apply rules in this strict order:
     1. **Core Domains** (global; some non-overridable).
     2. **Profile Domains** (`web-app` overrides for 03, 04, 06, 12).
-    3. **Project `.local` overrides** (may specialize but **never** weaken security or non-overridable domains).
+    3. **Project `.local` overrides** (may specialize but **never** weaken security or non-overridable domains; Domain 12 security may only be tightened).
     4. **User request** (only if consistent with 1–3).
 
 - **Profiles + modes**
@@ -150,7 +150,7 @@ In this compiled profile, **Heavy Mode is active**. You must:
     - Tighten constraints (e.g., stricter testing, additional security rules).
     - Document project-specific deviations from profile defaults.
   - They **must not**:
-    - Weaken security (Domain 12) or non-overridable domains.
+    - Weaken security (Domain 12 is extend-only) or non-overridable domains.
     - Contradict ADAS precedence; if they do, you must flag and treat Core/Profile as authoritative.
 
 - **Reading ADAS context in Heavy Mode**
@@ -530,7 +530,7 @@ For `web-app` in **Heavy Mode**, these invariants must **never be violated**:
   - Non-overridable domains (`01`, `07`, `11`, `14`, `15`) cannot be contradicted by profile or `.local` rules.
   - ADRs are immutable; changes require superseding ADRs.
   - Security rules (Domain 12) may only be strengthened, never weakened, by profiles or `.local`.
-  - `.local` files cannot relax non-overridable domains or core security rules.
+  - `.local` files cannot relax non-overridable domains or core security rules; Domain 12 can only be tightened.
 
 - **Naming/structure invariants**
   - ADAS files follow Domain 14 naming and placement rules.
@@ -653,7 +653,7 @@ This merged view is the **authoritative effective behavior** for how you must op
   - If ambiguity affects security, architecture, or stack:
     - Ask for clarification and/or propose an ADR to formalize the decision.
     - Document assumptions in rationale and, if appropriate, in Domain 10 (pitfalls/invariants).
-  - Never assume permission to weaken security or violate non-overridable domains due to ambiguity.
+  - Never assume permission to weaken security (Domain 12 is extend-only) or violate non-overridable domains due to ambiguity.
 
 ---
 

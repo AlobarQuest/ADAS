@@ -111,12 +111,12 @@ Below is an expanded version of the recommended schema:
       "description": "ADAS profile for web application projects.",
       "domains_overlay_root": "domains/profiles/web-app",
       "overrides_domains": ["03", "04", "06", "12"],
-      "starter": {
-        "name": "ADAS Web App Starter",
-        "repo": "AlobarQuest/adas-web-starter",
-        "branch": "main",
-        "path": "/starters/web-app"
-      }
+        "starter": {
+          "name": "ADAS Web App Starter",
+          "repo": "AlobarQuest/adas-web-starter",
+          "branch": "main",
+          "path": "/starters/web-app/.ai"
+        }
     },
 
     "desktop-app": {
@@ -129,7 +129,7 @@ Below is an expanded version of the recommended schema:
         "name": "ADAS Desktop App Starter",
         "repo": "AlobarQuest/adas-desktop-starter",
         "branch": "main",
-        "path": "/starters/desktop-app"
+        "path": "/starters/desktop-app/.ai"
       }
     },
 
@@ -143,7 +143,7 @@ Below is an expanded version of the recommended schema:
         "name": "ADAS iOS Starter",
         "repo": "AlobarQuest/adas-mobile-ios-starter",
         "branch": "main",
-        "path": "/starters/mobile-ios"
+        "path": "/starters/mobile-ios/.ai"
       }
     }
   },

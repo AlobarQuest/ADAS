@@ -1,3 +1,8 @@
+> **⚠️ ARCHIVED**: This project has been retired and is no longer maintained.
+> Reason: Superseded by Claude Code and modern AI dev tooling
+> Retired: 2026-06-09
+
+
 # ADAS — AI Development Assistant System (Global Repository)
 
 This repository contains the **Global ADAS**, the authoritative governance system that defines how Devon’s AI helpers think, behave, decide, generate code, and coordinate work across all projects.
